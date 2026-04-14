@@ -9,6 +9,7 @@ public class User {
     private String passwordHash;
     private String salt;
     private String zipCode;
+    private String role;
     private Timestamp createdAt;
 
     public User() {}
@@ -30,6 +31,9 @@ public class User {
 
     public String getZipCode() { return zipCode; }
     public void setZipCode(String zipCode) { this.zipCode = zipCode; }
+
+    public String getRole() { return role; }
+    public void setRole(String role) { this.role = role; }
 
     public Timestamp getCreatedAt() { return createdAt; }
     public void setCreatedAt(Timestamp createdAt) { this.createdAt = createdAt; }
