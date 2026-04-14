@@ -1,0 +1,7 @@
+com/nearfix/servlet/LoginServlet.class
+com/nearfix/dao/UserDAO.class
+com/nearfix/model/User.class
+com/nearfix/servlet/LogoutServlet.class
+com/nearfix/servlet/RegisterServlet.class
+com/nearfix/dao/DatabaseConnection.class
+com/nearfix/servlet/ProfileServlet.class
