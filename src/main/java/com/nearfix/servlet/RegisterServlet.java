@@ -21,6 +21,7 @@ public class RegisterServlet extends HttpServlet {
         String email = req.getParameter("email");
         String password = req.getParameter("password");
         String confirm = req.getParameter("confirmPassword");
+        String zipCode = req.getParameter("zipCode");
 
         if (name == null || email == null || password == null || name.isEmpty() || email.isEmpty() || password.isEmpty()) {
             req.setAttribute("error", "All fields are required.");
@@ -34,8 +35,17 @@ public class RegisterServlet extends HttpServlet {
             return;
         }
 
+        if (zipCode != null) {
+            zipCode = zipCode.trim();
+            if (!zipCode.isEmpty() && !zipCode.matches("\\d{5}")) {
+                req.setAttribute("error", "Zip code must be 5 digits.");
+                req.getRequestDispatcher("/register.jsp").forward(req, resp);
+                return;
+            }
+        }
+
         UserDAO dao = new UserDAO();
-        boolean success = dao.registerUser(name, email, password);
+        boolean success = dao.registerUser(name, email, password, zipCode);
 
         if (success) {
             resp.sendRedirect(req.getContextPath() + "/login?registered=true");
