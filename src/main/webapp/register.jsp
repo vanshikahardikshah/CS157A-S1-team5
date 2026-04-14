@@ -46,6 +46,13 @@
             <label for="zipCode">Zip Code</label>
             <input type="text" id="zipCode" name="zipCode" pattern="\d{5}" maxlength="5" placeholder="e.g. 95112">
         </div>
+        <div class="form-group">
+            <label for="role">I want to</label>
+            <select id="role" name="role" required class="form-select">
+                <option value="customer">Find Services (Customer)</option>
+                <option value="provider">Offer Services (Provider)</option>
+            </select>
+        </div>
         <button type="submit" class="btn btn-primary">Register</button>
     </form>
 

@@ -44,8 +44,13 @@ public class RegisterServlet extends HttpServlet {
             }
         }
 
+        String role = req.getParameter("role");
+        if (role == null || role.isEmpty()) {
+            role = "customer";
+        }
+
         UserDAO dao = new UserDAO();
-        boolean success = dao.registerUser(name, email, password, zipCode);
+        boolean success = dao.registerUser(name, email, password, zipCode, role);
 
         if (success) {
             resp.sendRedirect(req.getContextPath() + "/login?registered=true");

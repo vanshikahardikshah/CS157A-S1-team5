@@ -5,9 +5,14 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class DatabaseConnection {
-    private static final String URL = "jdbc:mysql://localhost:3306/nearfix?useSSL=false&serverTimezone=UTC";
-    private static final String USER = "root";
-    private static final String PASSWORD = "";
+    private static final String URL = env("DB_URL", "jdbc:mysql://localhost:3306/nearfix?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC");
+    private static final String USER = env("DB_USER", "root");
+    private static final String PASSWORD = env("DB_PASSWORD", "");
+
+    private static String env(String key, String defaultValue) {
+        String val = System.getenv(key);
+        return (val != null && !val.isEmpty()) ? val : defaultValue;
+    }
 
     static {
         try {

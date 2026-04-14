@@ -15,7 +15,16 @@
     <div class="nav-links">
         <c:choose>
             <c:when test="${not empty sessionScope.user}">
-                <a href="${pageContext.request.contextPath}/profile">My Profile</a>
+                <c:choose>
+                    <c:when test="${sessionScope.user.role == 'provider'}">
+                        <a href="${pageContext.request.contextPath}/provider/profile">Provider Dashboard</a>
+                        <a href="${pageContext.request.contextPath}/provider/services">My Services</a>
+                        <a href="${pageContext.request.contextPath}/provider/bookings">Bookings</a>
+                    </c:when>
+                    <c:otherwise>
+                        <a href="${pageContext.request.contextPath}/profile">My Profile</a>
+                    </c:otherwise>
+                </c:choose>
                 <a href="${pageContext.request.contextPath}/logout">Logout</a>
             </c:when>
             <c:otherwise>

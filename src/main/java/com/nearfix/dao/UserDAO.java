@@ -27,7 +27,11 @@ public class UserDAO {
     }
 
     public boolean registerUser(String name, String email, String password, String zipCode) {
-        String sql = "INSERT INTO users (name, email, password_hash, salt, zip_code) VALUES (?, ?, ?, ?, ?)";
+        return registerUser(name, email, password, zipCode, "customer");
+    }
+
+    public boolean registerUser(String name, String email, String password, String zipCode, String role) {
+        String sql = "INSERT INTO users (name, email, password_hash, salt, zip_code, role) VALUES (?, ?, ?, ?, ?, ?)";
         String salt = generateSalt();
         String hash = hashPassword(password, salt);
 
@@ -38,6 +42,7 @@ public class UserDAO {
             ps.setString(3, hash);
             ps.setString(4, salt);
             ps.setString(5, zipCode == null || zipCode.isBlank() ? null : zipCode.trim());
+            ps.setString(6, role);
             ps.executeUpdate();
             return true;
         } catch (SQLException e) {
@@ -62,6 +67,7 @@ public class UserDAO {
                     user.setName(rs.getString("name"));
                     user.setEmail(rs.getString("email"));
                     user.setZipCode(rs.getString("zip_code"));
+                    user.setRole(rs.getString("role"));
                     user.setCreatedAt(rs.getTimestamp("created_at"));
                     return user;
                 }
