@@ -29,12 +29,12 @@
 <section class="hero">
     <h1>Find Trusted Local Services</h1>
     <p>Connect with plumbers, electricians, cleaners, technicians and more in your area.</p>
-    <div class="search-bar">
-        <input type="text" placeholder="What service do you need?" disabled>
-        <input type="text" placeholder="Zip Code" style="max-width:140px;" disabled>
-        <button type="button" disabled>Search</button>
-    </div>
-    <p style="margin-top:0.8rem; font-size:0.85rem; opacity:0.7;">Search coming soon &mdash; register now to get started!</p>
+    <form action="${pageContext.request.contextPath}/searchResults.jsp" method="get" class="search-bar">
+    <input type="text" name="service" placeholder="What service do you need?" required>
+    <input type="text" name="zipCode" placeholder="Zip Code" style="max-width:140px;">
+    <button type="submit">Search</button>
+</form>
+<p style="margin-top:0.8rem; font-size:0.85rem; opacity:0.7;">Search services by keyword and optional ZIP code.</p>
 </section>
 
 <section class="categories">
