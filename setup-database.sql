@@ -1,7 +1,7 @@
 CREATE DATABASE IF NOT EXISTS nearfix;                    
   USE nearfix;                                   
 
-  -- Create an app database user with no password (as requested)
+  -- Create an app database user with no password
   CREATE USER IF NOT EXISTS 'nearfix_user'@'localhost';
   GRANT ALL PRIVILEGES ON nearfix.* TO 'nearfix_user'@'localhost';
 
