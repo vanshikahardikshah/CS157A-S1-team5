@@ -60,20 +60,26 @@
             Class.forName("com.mysql.cj.jdbc.Driver");
 
             con = DriverManager.getConnection(
-                "jdbc:mysql://localhost:3306/nearfix?useSSL=false&serverTimezone=UTC",
-                "root",
-                "Hardik2130"
+                "jdbc:mysql://localhost:3306/nearfix?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC",
+                "nearfix_user",
+                ""
             );
 
             String sql;
 
             if (zipCode != null && !zipCode.trim().isEmpty()) {
-                sql = "SELECT * FROM services WHERE service_title LIKE ? AND location_zip = ?";
+                sql = "SELECT s.*, p.business_name, u.email FROM services s " +
+                      "JOIN providers p ON s.provider_id = p.provider_id " +
+                      "JOIN users u ON p.user_id = u.user_id " +
+                      "WHERE s.service_name LIKE ? AND s.location_zip = ?";
                 ps = con.prepareStatement(sql);
                 ps.setString(1, "%" + service + "%");
                 ps.setString(2, zipCode.trim());
             } else {
-                sql = "SELECT * FROM services WHERE service_title LIKE ?";
+                sql = "SELECT s.*, p.business_name, u.email FROM services s " +
+                      "JOIN providers p ON s.provider_id = p.provider_id " +
+                      "JOIN users u ON p.user_id = u.user_id " +
+                      "WHERE s.service_name LIKE ?";
                 ps = con.prepareStatement(sql);
                 ps.setString(1, "%" + service + "%");
             }
@@ -85,12 +91,12 @@
                 found = true;
     %>
                 <div class="result-card">
-                    <h3><%= rs.getString("service_title") %></h3>
+                    <h3><%= rs.getString("service_name") %></h3>
+                    <p><strong>Provider:</strong> <%= rs.getString("business_name") %></p>
                     <p><strong>Description:</strong> <%= rs.getString("description") %></p>
-                    <p><strong>Price:</strong> $<%= rs.getString("price_rate") %></p>
+                    <p><strong>Price:</strong> $<%= rs.getString("price") %></p>
                     <p><strong>ZIP Code:</strong> <%= rs.getString("location_zip") %></p>
-                    <p><strong>Email:</strong> <%= rs.getString("contact_email") %></p>
-                    <p><strong>Phone:</strong> <%= rs.getString("contact_phone") %></p>
+                    <p><strong>Email:</strong> <%= rs.getString("email") %></p>
                 </div>
     <%
             }
