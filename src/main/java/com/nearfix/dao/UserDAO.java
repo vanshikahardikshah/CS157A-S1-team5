@@ -62,15 +62,23 @@ public class UserDAO {
                 String storedHash = rs.getString("password_hash");
                 String inputHash = hashPassword(password, salt);
                 if (storedHash.equals(inputHash)) {
-                    User user = new User();
-                    user.setUserId(rs.getInt("user_id"));
-                    user.setName(rs.getString("name"));
-                    user.setEmail(rs.getString("email"));
-                    user.setZipCode(rs.getString("zip_code"));
-                    user.setRole(rs.getString("role"));
-                    user.setCreatedAt(rs.getTimestamp("created_at"));
-                    return user;
+                    return mapUser(rs);
                 }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public User getById(int userId) {
+        String sql = "SELECT * FROM users WHERE user_id = ?";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, userId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return mapUser(rs);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -133,5 +141,16 @@ public class UserDAO {
             e.printStackTrace();
         }
         return false;
+    }
+
+    private User mapUser(ResultSet rs) throws SQLException {
+        User user = new User();
+        user.setUserId(rs.getInt("user_id"));
+        user.setName(rs.getString("name"));
+        user.setEmail(rs.getString("email"));
+        user.setZipCode(rs.getString("zip_code"));
+        user.setRole(rs.getString("role"));
+        user.setCreatedAt(rs.getTimestamp("created_at"));
+        return user;
     }
 }

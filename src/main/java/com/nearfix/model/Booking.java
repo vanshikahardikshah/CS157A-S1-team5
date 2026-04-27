@@ -10,6 +10,9 @@ public class Booking {
     private Date bookingDate;
     private String status;
     private BigDecimal totalPrice;
+    private String serviceName;
+    private String customerName;
+    private String providerBusinessName;
 
     public Booking() {}
 
@@ -30,4 +33,13 @@ public class Booking {
 
     public BigDecimal getTotalPrice() { return totalPrice; }
     public void setTotalPrice(BigDecimal totalPrice) { this.totalPrice = totalPrice; }
+
+    public String getServiceName() { return serviceName; }
+    public void setServiceName(String serviceName) { this.serviceName = serviceName; }
+
+    public String getCustomerName() { return customerName; }
+    public void setCustomerName(String customerName) { this.customerName = customerName; }
+
+    public String getProviderBusinessName() { return providerBusinessName; }
+    public void setProviderBusinessName(String providerBusinessName) { this.providerBusinessName = providerBusinessName; }
 }

@@ -8,15 +8,55 @@ import java.util.List;
 
 public class BookingDAO {
 
+    public boolean createBooking(Booking booking) {
+        String sql = "INSERT INTO bookings (customer_id, service_id, booking_date, status, total_price) VALUES (?, ?, ?, ?, ?)";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, booking.getCustomerId());
+            ps.setInt(2, booking.getServiceId());
+            ps.setDate(3, booking.getBookingDate());
+            ps.setString(4, booking.getStatus());
+            ps.setBigDecimal(5, booking.getTotalPrice());
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
     public List<Booking> getByProviderId(int providerId) {
         List<Booking> bookings = new ArrayList<>();
-        String sql = "SELECT b.* FROM bookings b " +
+        String sql = "SELECT b.*, s.service_name, u.name AS customer_name, p.business_name " +
+                     "FROM bookings b " +
                      "JOIN services s ON b.service_id = s.service_id " +
+                     "JOIN users u ON b.customer_id = u.user_id " +
+                     "JOIN providers p ON s.provider_id = p.provider_id " +
                      "WHERE s.provider_id = ? " +
-                     "ORDER BY b.booking_date DESC";
+                     "ORDER BY b.booking_date DESC, b.booking_id DESC";
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, providerId);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                bookings.add(mapRow(rs));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return bookings;
+    }
+
+    public List<Booking> getByCustomerId(int customerId) {
+        List<Booking> bookings = new ArrayList<>();
+        String sql = "SELECT b.*, s.service_name, p.business_name " +
+                     "FROM bookings b " +
+                     "JOIN services s ON b.service_id = s.service_id " +
+                     "JOIN providers p ON s.provider_id = p.provider_id " +
+                     "WHERE b.customer_id = ? " +
+                     "ORDER BY b.booking_date DESC, b.booking_id DESC";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, customerId);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 bookings.add(mapRow(rs));
@@ -63,6 +103,19 @@ public class BookingDAO {
         b.setBookingDate(rs.getDate("booking_date"));
         b.setStatus(rs.getString("status"));
         b.setTotalPrice(rs.getBigDecimal("total_price"));
+
+        try {
+            b.setServiceName(rs.getString("service_name"));
+        } catch (SQLException ignored) {
+        }
+        try {
+            b.setCustomerName(rs.getString("customer_name"));
+        } catch (SQLException ignored) {
+        }
+        try {
+            b.setProviderBusinessName(rs.getString("business_name"));
+        } catch (SQLException ignored) {
+        }
         return b;
     }
 }

@@ -32,15 +32,42 @@
             color: #1f3c88;
             font-weight: 600;
         }
+
+        .result-actions {
+            margin-top: 1rem;
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+        }
     </style>
 </head>
 <body>
 
+<%
+    Object sessionUser = session.getAttribute("user");
+    String userRole = null;
+    if (sessionUser != null) {
+        try {
+            userRole = ((com.nearfix.model.User) sessionUser).getRole();
+        } catch (Exception ignored) {}
+    }
+%>
+
 <nav class="navbar">
     <a href="${pageContext.request.contextPath}/" class="logo">Near<span>Fix</span></a>
     <div class="nav-links">
-        <a href="${pageContext.request.contextPath}/login">Login</a>
-        <a href="${pageContext.request.contextPath}/register">Register</a>
+        <% if (session.getAttribute("user") != null) { %>
+            <% if ("provider".equals(userRole)) { %>
+                <a href="${pageContext.request.contextPath}/provider/profile">Provider Dashboard</a>
+            <% } else { %>
+                <a href="${pageContext.request.contextPath}/profile">My Profile</a>
+                <a href="${pageContext.request.contextPath}/customer/bookings">My Bookings</a>
+            <% } %>
+            <a href="${pageContext.request.contextPath}/logout">Logout</a>
+        <% } else { %>
+            <a href="${pageContext.request.contextPath}/login">Login</a>
+            <a href="${pageContext.request.contextPath}/register">Register</a>
+        <% } %>
     </div>
 </nav>
 
@@ -68,18 +95,24 @@
             String sql;
 
             if (zipCode != null && !zipCode.trim().isEmpty()) {
-                sql = "SELECT s.*, p.business_name, u.email FROM services s " +
+                sql = "SELECT s.service_id, s.provider_id, s.service_name, s.description, s.price, s.location_zip, " +
+                      "p.business_name, u.email " +
+                      "FROM services s " +
                       "JOIN providers p ON s.provider_id = p.provider_id " +
                       "JOIN users u ON p.user_id = u.user_id " +
-                      "WHERE s.service_name LIKE ? AND s.location_zip = ?";
+                      "WHERE s.service_name LIKE ? AND s.location_zip = ? " +
+                      "ORDER BY s.service_name, p.business_name";
                 ps = con.prepareStatement(sql);
                 ps.setString(1, "%" + service + "%");
                 ps.setString(2, zipCode.trim());
             } else {
-                sql = "SELECT s.*, p.business_name, u.email FROM services s " +
+                sql = "SELECT s.service_id, s.provider_id, s.service_name, s.description, s.price, s.location_zip, " +
+                      "p.business_name, u.email " +
+                      "FROM services s " +
                       "JOIN providers p ON s.provider_id = p.provider_id " +
                       "JOIN users u ON p.user_id = u.user_id " +
-                      "WHERE s.service_name LIKE ?";
+                      "WHERE s.service_name LIKE ? " +
+                      "ORDER BY s.service_name, p.business_name";
                 ps = con.prepareStatement(sql);
                 ps.setString(1, "%" + service + "%");
             }
@@ -97,6 +130,14 @@
                     <p><strong>Price:</strong> $<%= rs.getString("price") %></p>
                     <p><strong>ZIP Code:</strong> <%= rs.getString("location_zip") %></p>
                     <p><strong>Email:</strong> <%= rs.getString("email") %></p>
+                    <div class="result-actions">
+                        <a class="btn btn-primary btn-sm" href="${pageContext.request.contextPath}/providers/view?providerId=<%= rs.getInt("provider_id") %>">View Provider Profile</a>
+                        <% if ("customer".equals(userRole)) { %>
+                            <a class="btn btn-success btn-sm" href="${pageContext.request.contextPath}/customer/book?serviceId=<%= rs.getInt("service_id") %>">Request Booking</a>
+                        <% } else if (sessionUser == null) { %>
+                            <a class="btn btn-success btn-sm" href="${pageContext.request.contextPath}/login">Login to Book</a>
+                        <% } %>
+                    </div>
                 </div>
     <%
             }

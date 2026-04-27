@@ -14,6 +14,7 @@
     <a href="${pageContext.request.contextPath}/" class="logo">Near<span>Fix</span></a>
     <div class="nav-links">
         <a href="${pageContext.request.contextPath}/profile">My Profile</a>
+        <a href="${pageContext.request.contextPath}/customer/bookings">My Bookings</a>
         <a href="${pageContext.request.contextPath}/logout">Logout</a>
     </div>
 </nav>
@@ -28,7 +29,6 @@
         <div class="alert alert-error">${error}</div>
     </c:if>
 
-    <!-- Update Profile -->
     <section>
         <h3>Edit Profile</h3>
         <form method="post" action="${pageContext.request.contextPath}/profile">
@@ -49,7 +49,6 @@
         </form>
     </section>
 
-    <!-- Change Password -->
     <section>
         <h3>Change Password</h3>
         <form method="post" action="${pageContext.request.contextPath}/profile">
@@ -66,7 +65,6 @@
         </form>
     </section>
 
-    <!-- Delete Account -->
     <section>
         <h3>Delete Account</h3>
         <p style="font-size:0.9rem; margin-bottom:1rem; color:#777;">This action is permanent and cannot be undone.</p>

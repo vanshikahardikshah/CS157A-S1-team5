@@ -41,6 +41,8 @@
                     <thead>
                         <tr>
                             <th>Booking ID</th>
+                            <th>Service</th>
+                            <th>Customer</th>
                             <th>Date</th>
                             <th>Total Price</th>
                             <th>Status</th>
@@ -51,6 +53,8 @@
                         <c:forEach var="booking" items="${bookings}">
                             <tr>
                                 <td>#${booking.bookingId}</td>
+                                <td>${booking.serviceName}</td>
+                                <td>${booking.customerName}</td>
                                 <td>${booking.bookingDate}</td>
                                 <td>$${booking.totalPrice}</td>
                                 <td>

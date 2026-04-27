@@ -2,45 +2,84 @@
 
 ## NearFix - A Service Request Application
 
-### Prerequisites
+This project is a Java/JSP web application for connecting customers with local service providers.
+
+## Implemented functional requirements
+
+The updated project now includes these additional customer-facing requirements:
+
+1. **Viewing providers' profiles**
+   - Customers can open a public provider profile page.
+   - The page shows the provider's business name, contact email, contact number, service ZIP code, approval status, listed services, and upcoming availability.
+
+2. **Booking provider appointments**
+   - Customers can request a booking for a provider service.
+   - Customers choose from the provider's available appointment slots.
+   - A booking request is stored in the `bookings` table with `pending` status.
+   - The selected availability slot is removed once booked to prevent duplicate booking of the same slot.
+
+### Also included
+- **Customer booking history page** so customers can review submitted booking requests and current statuses.
+- **Provider booking page enhancement** so providers can see the service name and customer name for each booking request.
+
+## Prerequisites
 - Java 11 or higher
 - Maven 3.6+
 - MySQL 8.0+
 
-### Database Setup
+## Database setup
 
-1. **Run the setup script** to create the database and user account:
-   - Open MySQL Command Line Client or MySQL Workbench
-   - Connect as root (or any admin user)
-   - Run the contents of `setup-database.sql`
-   
-   Alternatively, from the command line:
-   ```bash
-   mysql -u root -p < setup-database.sql
-   ```
+1. Open MySQL Command Line Client or MySQL Workbench.
+2. Run the contents of `setup-database.sql`.
 
-2. **The script will:**
-   - Create the `nearfix` database
-   - Create the `users` table with proper schema
-   - Create a `User` account with no password
-   - Grant all privileges on the nearfix database to the User account
+Or from the command line:
 
-### Database Configuration
+```bash
+mysql -u root -p < setup-database.sql
+```
 
-The application is configured to connect to:
+The setup script will:
+- Create the `nearfix` database
+- Create the application user `nearfix_user` with no password
+- Create the tables used by the application
+
+## Database configuration
+
+The application is configured by default to connect to:
 - **Host:** localhost
 - **Port:** 3306
 - **Database:** nearfix
-- **Username:** User
+- **Username:** nearfix_user
 - **Password:** (empty)
 
-These settings are defined in: `src/main/java/com/nearfix/dao/DatabaseConnection.java`
+These defaults are defined in:
+- `src/main/java/com/nearfix/dao/DatabaseConnection.java`
 
-### Running the Application
+You can also override them with environment variables:
+- `DB_URL`
+- `DB_USER`
+- `DB_PASSWORD`
+
+## Running the application
 
 ```bash
-mvn clean compile
+mvn clean package
 mvn tomcat7:run
 ```
 
-The application will start on http://localhost:8080/nearfix
+The application will start on:
+
+```text
+http://localhost:8080/nearfix
+```
+
+## Main routes
+
+- `/` - home page and service search
+- `/providers/view?providerId=...` - public provider profile
+- `/customer/book?serviceId=...` - booking request page
+- `/customer/bookings` - customer booking history
+- `/provider/profile` - provider dashboard
+- `/provider/services` - provider services management
+- `/provider/availability` - provider availability management
+- `/provider/bookings` - provider booking management

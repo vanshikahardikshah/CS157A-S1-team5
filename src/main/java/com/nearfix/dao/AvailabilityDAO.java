@@ -40,6 +40,21 @@ public class AvailabilityDAO {
         return slots;
     }
 
+    public Availability getById(int availabilityId) {
+        String sql = "SELECT * FROM availability WHERE availability_id = ?";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, availabilityId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return mapRow(rs);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     public boolean deleteSlot(int availabilityId, int providerId) {
         String sql = "DELETE FROM availability WHERE availability_id = ? AND provider_id = ?";
         try (Connection conn = DatabaseConnection.getConnection();
