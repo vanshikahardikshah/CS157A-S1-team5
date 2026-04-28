@@ -96,3 +96,11 @@ CREATE TABLE IF NOT EXISTS reviews (
     FOREIGN KEY (customer_id) REFERENCES users(user_id) ON DELETE CASCADE,
     FOREIGN KEY (provider_id) REFERENCES providers(provider_id) ON DELETE CASCADE
 );
+
+INSERT INTO service_categories (category_name, description) VALUES
+    ('Electrician', 'Electrical installation, repair, and maintenance services.'),
+    ('Plumber', 'Pipe repair, leak fixing, drainage, and plumbing services.'),
+    ('Cleaner', 'Home, office, and deep cleaning services.'),
+    ('Technician', 'General repair and technical support services.'),
+    ('Painter', 'Interior and exterior painting services.')
+ON DUPLICATE KEY UPDATE description = VALUES(description);

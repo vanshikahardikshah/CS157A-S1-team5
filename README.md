@@ -9,38 +9,47 @@
 
 ### Database Setup
 
-1. **Run the setup script** to create the database and user account:
-   - Open MySQL Command Line Client or MySQL Workbench
-   - Connect as root (or any admin user)
-   - Run the contents of `setup-database.sql`
-   
-   Alternatively, from the command line:
-   ```bash
-   mysql -u root -p < setup-database.sql
-   ```
+1. Create the database, tables, app user, and starter categories:
 
-2. **The script will:**
-   - Create the `nearfix` database
-   - Create the `users` table with proper schema
-   - Create a `User` account with no password
-   - Grant all privileges on the nearfix database to the User account
+```bash
+mysql -u root -p < setup-database.sql
+```
+
+This script will:
+- Create the `nearfix` database
+- Create the application tables
+- Create the `nearfix_user` MySQL account with an empty password
+- Seed starter service categories so providers can add services immediately
 
 ### Database Configuration
 
-The application is configured to connect to:
+The application defaults to:
 - **Host:** localhost
 - **Port:** 3306
 - **Database:** nearfix
-- **Username:** User
+- **Username:** nearfix_user
 - **Password:** (empty)
 
-These settings are defined in: `src/main/java/com/nearfix/dao/DatabaseConnection.java`
+You can override them with environment variables:
+- `DB_URL`
+- `DB_USER`
+- `DB_PASSWORD`
+
+These settings are defined in `src/main/java/com/nearfix/dao/DatabaseConnection.java`.
 
 ### Running the Application
 
 ```bash
-mvn clean compile
+mvn clean package
 mvn tomcat7:run
 ```
 
-The application will start on http://localhost:8080/nearfix
+The application will start on:
+- http://localhost:8080/nearfix
+
+This version includes:
+- fixed search error handling
+- ZIP-only search support
+- provider business-name search
+- consistent database setup docs
+- seeded default service categories

@@ -9,16 +9,19 @@ import java.util.List;
 
 public class ServiceDAO {
 
-    public List<SearchResult> search(String keyword, String zipCode) {
+    public List<SearchResult> search(String keyword, String zipCode) throws SQLException {
         return search(keyword, zipCode, null);
     }
 
-    public List<SearchResult> search(String keyword, String zipCode, String preferredZip) {
+    public List<SearchResult> search(String keyword, String zipCode, String preferredZip) throws SQLException {
+        boolean hasKeyword = keyword != null && !keyword.trim().isEmpty();
         boolean hasZipFilter = zipCode != null && !zipCode.trim().isEmpty();
-        String trimmed = keyword == null ? "" : keyword.trim();
-        String contains = "%" + trimmed + "%";
-        String prefix = trimmed + "%";
-        String prefZip = preferredZip == null ? "" : preferredZip;
+
+        String trimmedKeyword = hasKeyword ? keyword.trim() : "";
+        String trimmedPreferredZip = preferredZip == null ? "" : preferredZip.trim();
+
+        String contains = "%" + trimmedKeyword + "%";
+        String prefix = trimmedKeyword + "%";
 
         StringBuilder sql = new StringBuilder(
             "SELECT s.service_id, s.provider_id, s.service_name, s.description, " +
@@ -30,35 +33,67 @@ public class ServiceDAO {
             "JOIN providers p ON s.provider_id = p.provider_id " +
             "JOIN users u ON p.user_id = u.user_id " +
             "JOIN service_categories c ON s.category_id = c.category_id " +
-            "LEFT JOIN (SELECT provider_id, AVG(rating) AS avg_rating, COUNT(*) AS review_count " +
-            "           FROM reviews GROUP BY provider_id) rev ON rev.provider_id = p.provider_id " +
-            "WHERE (s.service_name LIKE ? OR s.description LIKE ? OR c.category_name LIKE ?)"
+            "LEFT JOIN (" +
+            "    SELECT provider_id, AVG(rating) AS avg_rating, COUNT(*) AS review_count " +
+            "    FROM reviews GROUP BY provider_id" +
+            ") rev ON rev.provider_id = p.provider_id " +
+            "WHERE 1 = 1"
         );
-        if (hasZipFilter) sql.append(" AND s.location_zip = ?");
+
+        if (hasKeyword) {
+            sql.append(
+                " AND (" +
+                "s.service_name LIKE ? OR " +
+                "s.description LIKE ? OR " +
+                "c.category_name LIKE ? OR " +
+                "p.business_name LIKE ?" +
+                ")"
+            );
+        }
+
+        if (hasZipFilter) {
+            sql.append(" AND s.location_zip = ?");
+        }
+
         sql.append(
             " ORDER BY CASE " +
-            "   WHEN s.service_name = ? THEN 0 " +
-            "   WHEN s.service_name LIKE ? THEN 1 " +
-            "   WHEN s.service_name LIKE ? THEN 2 " +
-            "   WHEN c.category_name LIKE ? THEN 3 " +
+            "   WHEN ? <> '' AND s.service_name = ? THEN 0 " +
+            "   WHEN ? <> '' AND s.service_name LIKE ? THEN 1 " +
+            "   WHEN ? <> '' AND c.category_name LIKE ? THEN 2 " +
+            "   WHEN ? <> '' AND p.business_name LIKE ? THEN 3 " +
             "   ELSE 4 END, " +
-            " CASE WHEN s.location_zip = ? THEN 0 ELSE 1 END, " +
+            " CASE WHEN ? <> '' AND s.location_zip = ? THEN 0 ELSE 1 END, " +
             " s.service_name"
         );
 
         List<SearchResult> results = new ArrayList<>();
+
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql.toString())) {
             int idx = 1;
-            ps.setString(idx++, contains);
-            ps.setString(idx++, contains);
-            ps.setString(idx++, contains);
-            if (hasZipFilter) ps.setString(idx++, zipCode.trim());
-            ps.setString(idx++, trimmed);
+
+            if (hasKeyword) {
+                ps.setString(idx++, contains);
+                ps.setString(idx++, contains);
+                ps.setString(idx++, contains);
+                ps.setString(idx++, contains);
+            }
+
+            if (hasZipFilter) {
+                ps.setString(idx++, zipCode.trim());
+            }
+
+            ps.setString(idx++, trimmedKeyword);
+            ps.setString(idx++, trimmedKeyword);
+            ps.setString(idx++, trimmedKeyword);
             ps.setString(idx++, prefix);
+            ps.setString(idx++, trimmedKeyword);
             ps.setString(idx++, contains);
+            ps.setString(idx++, trimmedKeyword);
             ps.setString(idx++, contains);
-            ps.setString(idx++, prefZip);
+            ps.setString(idx++, trimmedPreferredZip);
+            ps.setString(idx++, trimmedPreferredZip);
+
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
                     SearchResult r = new SearchResult();
@@ -77,9 +112,8 @@ public class ServiceDAO {
                     results.add(r);
                 }
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
+
         return results;
     }
 

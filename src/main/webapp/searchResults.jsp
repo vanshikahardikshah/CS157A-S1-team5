@@ -46,12 +46,14 @@
             gap: 0.5rem;
             margin-bottom: 1.5rem;
         }
+
         .refine-bar input {
             flex: 1;
             padding: 0.6rem 0.8rem;
             border: 1px solid #ccc;
             border-radius: 8px;
         }
+
         .refine-bar button {
             padding: 0.6rem 1.2rem;
             border: none;
@@ -60,6 +62,14 @@
             color: white;
             font-weight: 600;
             cursor: pointer;
+        }
+
+        .alert-error {
+            background: #fce8e8;
+            color: #8a1f1f;
+            padding: 0.8rem 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
         }
     </style>
 </head>
@@ -94,18 +104,38 @@
     <a class="back-link" href="${pageContext.request.contextPath}/">&larr; Back to Home</a>
     <h1>Search Results</h1>
 
+    <c:if test="${not empty error}">
+        <div class="alert-error"><strong>Error:</strong> <c:out value="${error}"/></div>
+    </c:if>
+
     <form action="${pageContext.request.contextPath}/search" method="get" class="refine-bar">
-        <input type="text" name="service" value="<c:out value='${query}'/>" placeholder="Service keyword" required>
-        <input type="text" name="zipCode" value="<c:out value='${zipCode}'/>" placeholder="ZIP" maxlength="10" style="max-width:140px;">
+        <input type="text" name="service" value="<c:out value='${query}'/>" placeholder="Service keyword">
+        <input type="text" name="zipCode" value="<c:out value='${zipCode}'/>" placeholder="ZIP" maxlength="5" pattern="\d{5}" style="max-width:140px;">
         <button type="submit">Search</button>
     </form>
 
     <c:choose>
         <c:when test="${empty results}">
-            <p>No matching services found for "<c:out value='${query}'/>"<c:if test="${not empty zipCode}"> in ZIP <c:out value='${zipCode}'/></c:if>.</p>
+            <c:choose>
+                <c:when test="${not empty query and not empty zipCode}">
+                    <p>No matching services found for "<c:out value='${query}'/>" in ZIP <c:out value='${zipCode}'/>.</p>
+                </c:when>
+                <c:when test="${not empty query}">
+                    <p>No matching services found for "<c:out value='${query}'/>".</p>
+                </c:when>
+                <c:when test="${not empty zipCode}">
+                    <p>No matching services found in ZIP <c:out value='${zipCode}'/>.</p>
+                </c:when>
+                <c:otherwise>
+                    <p>Enter a service keyword, a ZIP code, or both to search.</p>
+                </c:otherwise>
+            </c:choose>
         </c:when>
         <c:otherwise>
-            <p style="margin-bottom:1rem; opacity:0.75;"><c:out value='${results.size()}'/> result(s) for "<c:out value='${query}'/>"<c:if test="${not empty zipCode}"> in ZIP <c:out value='${zipCode}'/></c:if>.</p>
+            <p style="margin-bottom:1rem; opacity:0.75;"><c:out value='${results.size()}'/> result(s)
+                <c:if test="${not empty query}"> for "<c:out value='${query}'/>"</c:if>
+                <c:if test="${not empty zipCode}"> in ZIP <c:out value='${zipCode}'/></c:if>.
+            </p>
             <c:forEach var="r" items="${results}">
                 <div class="result-card">
                     <h3><c:out value="${r.serviceName}"/></h3>
