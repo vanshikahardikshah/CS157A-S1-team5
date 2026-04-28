@@ -14,6 +14,7 @@
     <a href="${pageContext.request.contextPath}/" class="logo">Near<span>Fix</span></a>
     <div class="nav-links">
         <a href="${pageContext.request.contextPath}/profile">My Profile</a>
+        <a href="${pageContext.request.contextPath}/bookings">My Bookings</a>
         <a href="${pageContext.request.contextPath}/logout">Logout</a>
     </div>
 </nav>

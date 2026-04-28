@@ -133,8 +133,9 @@
                     <c:if test="${not empty r.providerEmail}">
                         <p><strong>Email:</strong> <c:out value="${r.providerEmail}"/></p>
                     </c:if>
-                    <p style="margin-top:0.6rem;">
-                        <a href="${pageContext.request.contextPath}/review?providerId=${r.providerId}" style="color:#1f3c88;font-weight:600;text-decoration:none;">Read &amp; leave reviews &rarr;</a>
+                    <p style="margin-top:0.6rem;display:flex;gap:1rem;flex-wrap:wrap;">
+                        <a href="${pageContext.request.contextPath}/book?serviceId=${r.serviceId}" style="background:#1f3c88;color:white;padding:0.5rem 1rem;border-radius:6px;font-weight:600;text-decoration:none;">Book Now</a>
+                        <a href="${pageContext.request.contextPath}/review?providerId=${r.providerId}" style="color:#1f3c88;font-weight:600;text-decoration:none;align-self:center;">Read &amp; leave reviews &rarr;</a>
                     </p>
                 </div>
             </c:forEach>
