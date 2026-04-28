@@ -21,8 +21,12 @@
                         <a href="${pageContext.request.contextPath}/provider/services">My Services</a>
                         <a href="${pageContext.request.contextPath}/provider/bookings">Bookings</a>
                     </c:when>
+                    <c:when test="${sessionScope.user.role == 'admin'}">
+                        <a href="${pageContext.request.contextPath}/admin/categories">Admin: Categories</a>
+                    </c:when>
                     <c:otherwise>
                         <a href="${pageContext.request.contextPath}/profile">My Profile</a>
+                        <a href="${pageContext.request.contextPath}/bookings">My Bookings</a>
                     </c:otherwise>
                 </c:choose>
                 <a href="${pageContext.request.contextPath}/logout">Logout</a>

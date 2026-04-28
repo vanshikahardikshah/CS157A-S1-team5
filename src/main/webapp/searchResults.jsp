@@ -71,6 +71,26 @@
             border-radius: 8px;
             margin-bottom: 1rem;
         }
+        .action-row {
+            margin-top: 0.8rem;
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        .primary-btn {
+            background:#1f3c88;
+            color:white;
+            padding:0.5rem 1rem;
+            border-radius:6px;
+            font-weight:600;
+            text-decoration:none;
+        }
+        .secondary-link {
+            color:#1f3c88;
+            font-weight:600;
+            text-decoration:none;
+        }
     </style>
 </head>
 <body>
@@ -86,8 +106,12 @@
                         <a href="${pageContext.request.contextPath}/provider/services">My Services</a>
                         <a href="${pageContext.request.contextPath}/provider/bookings">Bookings</a>
                     </c:when>
+                    <c:when test="${sessionScope.user.role == 'admin'}">
+                        <a href="${pageContext.request.contextPath}/admin/categories">Admin: Categories</a>
+                    </c:when>
                     <c:otherwise>
                         <a href="${pageContext.request.contextPath}/profile">My Profile</a>
+                        <a href="${pageContext.request.contextPath}/bookings">My Bookings</a>
                     </c:otherwise>
                 </c:choose>
                 <a href="${pageContext.request.contextPath}/logout">Logout</a>
@@ -163,9 +187,13 @@
                     <c:if test="${not empty r.providerEmail}">
                         <p><strong>Email:</strong> <c:out value="${r.providerEmail}"/></p>
                     </c:if>
-                    <p style="margin-top:0.6rem;">
-                        <a href="${pageContext.request.contextPath}/review?providerId=${r.providerId}" style="color:#1f3c88;font-weight:600;text-decoration:none;">Read &amp; leave reviews &rarr;</a>
-                    </p>
+                    <div class="action-row">
+                        <a class="secondary-link" href="${pageContext.request.contextPath}/providers/view?providerId=${r.providerId}">View Provider Profile &rarr;</a>
+                        <c:if test="${not empty sessionScope.user and sessionScope.user.role == 'customer'}">
+                            <a class="primary-btn" href="${pageContext.request.contextPath}/book?serviceId=${r.serviceId}">Book Now</a>
+                        </c:if>
+                        <a class="secondary-link" href="${pageContext.request.contextPath}/review?providerId=${r.providerId}">Read &amp; leave reviews &rarr;</a>
+                    </div>
                 </div>
             </c:forEach>
         </c:otherwise>

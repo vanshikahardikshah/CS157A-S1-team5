@@ -3,18 +3,21 @@ package com.nearfix.model;
 import java.math.BigDecimal;
 import java.sql.Date;
 
-public class Booking {
+public class BookingDetails {
     private int bookingId;
     private int customerId;
     private int serviceId;
+    private int providerId;
     private Date bookingDate;
     private String status;
     private BigDecimal totalPrice;
     private String serviceName;
-    private String customerName;
-    private String providerBusinessName;
+    private String categoryName;
+    private String businessName;
+    private String providerContact;
+    private String providerEmail;
 
-    public Booking() {}
+    public BookingDetails() {}
 
     public int getBookingId() { return bookingId; }
     public void setBookingId(int bookingId) { this.bookingId = bookingId; }
@@ -24,6 +27,9 @@ public class Booking {
 
     public int getServiceId() { return serviceId; }
     public void setServiceId(int serviceId) { this.serviceId = serviceId; }
+
+    public int getProviderId() { return providerId; }
+    public void setProviderId(int providerId) { this.providerId = providerId; }
 
     public Date getBookingDate() { return bookingDate; }
     public void setBookingDate(Date bookingDate) { this.bookingDate = bookingDate; }
@@ -37,9 +43,15 @@ public class Booking {
     public String getServiceName() { return serviceName; }
     public void setServiceName(String serviceName) { this.serviceName = serviceName; }
 
-    public String getCustomerName() { return customerName; }
-    public void setCustomerName(String customerName) { this.customerName = customerName; }
+    public String getCategoryName() { return categoryName; }
+    public void setCategoryName(String categoryName) { this.categoryName = categoryName; }
 
-    public String getProviderBusinessName() { return providerBusinessName; }
-    public void setProviderBusinessName(String providerBusinessName) { this.providerBusinessName = providerBusinessName; }
+    public String getBusinessName() { return businessName; }
+    public void setBusinessName(String businessName) { this.businessName = businessName; }
+
+    public String getProviderContact() { return providerContact; }
+    public void setProviderContact(String providerContact) { this.providerContact = providerContact; }
+
+    public String getProviderEmail() { return providerEmail; }
+    public void setProviderEmail(String providerEmail) { this.providerEmail = providerEmail; }
 }

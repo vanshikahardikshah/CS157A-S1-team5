@@ -24,6 +24,23 @@ public class AvailabilityDAO {
         }
     }
 
+    public List<Availability> getFutureByProviderId(int providerId) {
+        List<Availability> slots = new ArrayList<>();
+        String sql = "SELECT * FROM availability WHERE provider_id = ? AND available_date >= CURDATE() ORDER BY available_date, start_time";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, providerId);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    slots.add(mapRow(rs));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return slots;
+    }
+
     public List<Availability> getByProviderId(int providerId) {
         List<Availability> slots = new ArrayList<>();
         String sql = "SELECT * FROM availability WHERE provider_id = ? ORDER BY available_date, start_time";
@@ -38,6 +55,21 @@ public class AvailabilityDAO {
             e.printStackTrace();
         }
         return slots;
+    }
+
+    public Availability getById(int availabilityId) {
+        String sql = "SELECT * FROM availability WHERE availability_id = ?";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, availabilityId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return mapRow(rs);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     public boolean deleteSlot(int availabilityId, int providerId) {

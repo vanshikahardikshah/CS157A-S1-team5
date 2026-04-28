@@ -106,3 +106,24 @@ INSERT INTO service_categories (category_name, description) VALUES
     ('Technician', 'General repair and technical support services.'),
     ('Painter', 'Interior and exterior painting services.')
 ON DUPLICATE KEY UPDATE description = VALUES(description);
+
+-- Seed a default admin account for local testing/login
+INSERT INTO users (name, email, password_hash, salt, zip_code, role)
+VALUES (
+    'Admin',
+    'admin@nearfix.local',
+    'pgKFYseYCYlHRNOwRj2SFAmWtFgyrAnQA+wYY/3MXcE=',
+    'admin-salt-2026',
+    NULL,
+    'admin'
+)
+ON DUPLICATE KEY UPDATE
+    name = VALUES(name),
+    password_hash = VALUES(password_hash),
+    salt = VALUES(salt),
+    zip_code = VALUES(zip_code),
+    role = VALUES(role);
+
+INSERT IGNORE INTO admins (user_id)
+SELECT user_id FROM users WHERE email = 'admin@nearfix.local';
+

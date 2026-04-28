@@ -41,6 +41,8 @@
                     <thead>
                         <tr>
                             <th>Booking ID</th>
+                            <th>Service</th>
+                            <th>Customer</th>
                             <th>Date</th>
                             <th>Total Price</th>
                             <th>Status</th>
@@ -51,6 +53,8 @@
                         <c:forEach var="booking" items="${bookings}">
                             <tr>
                                 <td>#${booking.bookingId}</td>
+                                <td>${booking.serviceName}</td>
+                                <td>${booking.customerName}</td>
                                 <td>${booking.bookingDate}</td>
                                 <td>$${booking.totalPrice}</td>
                                 <td>
@@ -58,20 +62,25 @@
                                 </td>
                                 <td>
                                     <c:if test="${booking.status == 'pending'}">
-                                        <form method="post" action="${pageContext.request.contextPath}/provider/bookings"
-                                              style="display:inline;">
+                                        <form method="post" action="${pageContext.request.contextPath}/provider/bookings" style="display:inline;">
                                             <input type="hidden" name="bookingId" value="${booking.bookingId}">
                                             <input type="hidden" name="action" value="accept">
                                             <button type="submit" class="btn btn-success btn-sm">Accept</button>
                                         </form>
-                                        <form method="post" action="${pageContext.request.contextPath}/provider/bookings"
-                                              style="display:inline;">
+                                        <form method="post" action="${pageContext.request.contextPath}/provider/bookings" style="display:inline;">
                                             <input type="hidden" name="bookingId" value="${booking.bookingId}">
                                             <input type="hidden" name="action" value="reject">
                                             <button type="submit" class="btn btn-danger btn-sm">Reject</button>
                                         </form>
                                     </c:if>
-                                    <c:if test="${booking.status != 'pending'}">
+                                    <c:if test="${booking.status == 'confirmed'}">
+                                        <form method="post" action="${pageContext.request.contextPath}/provider/bookings" style="display:inline;">
+                                            <input type="hidden" name="bookingId" value="${booking.bookingId}">
+                                            <input type="hidden" name="action" value="complete">
+                                            <button type="submit" class="btn btn-primary btn-sm">Mark Completed</button>
+                                        </form>
+                                    </c:if>
+                                    <c:if test="${booking.status == 'cancelled' || booking.status == 'completed'}">
                                         <span class="text-muted">--</span>
                                     </c:if>
                                 </td>

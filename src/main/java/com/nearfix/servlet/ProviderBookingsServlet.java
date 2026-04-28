@@ -75,6 +75,12 @@ public class ProviderBookingsServlet extends HttpServlet {
             } else {
                 req.setAttribute("error", "Failed to reject booking.");
             }
+        } else if ("complete".equals(action)) {
+            if (bookingDAO.updateStatus(bookingId, "completed")) {
+                req.setAttribute("success", "Booking marked as completed.");
+            } else {
+                req.setAttribute("error", "Failed to update booking.");
+            }
         }
 
         req.setAttribute("bookings", bookingDAO.getByProviderId(provider.getProviderId()));

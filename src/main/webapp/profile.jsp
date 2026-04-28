@@ -14,6 +14,9 @@
     <a href="${pageContext.request.contextPath}/" class="logo">Near<span>Fix</span></a>
     <div class="nav-links">
         <a href="${pageContext.request.contextPath}/profile">My Profile</a>
+        <c:if test="${sessionScope.user.role == 'customer'}">
+            <a href="${pageContext.request.contextPath}/bookings">My Bookings</a>
+        </c:if>
         <a href="${pageContext.request.contextPath}/logout">Logout</a>
     </div>
 </nav>
@@ -28,7 +31,6 @@
         <div class="alert alert-error">${error}</div>
     </c:if>
 
-    <!-- Update Profile -->
     <section>
         <h3>Edit Profile</h3>
         <form method="post" action="${pageContext.request.contextPath}/profile">
@@ -49,7 +51,6 @@
         </form>
     </section>
 
-    <!-- Change Password -->
     <section>
         <h3>Change Password</h3>
         <form method="post" action="${pageContext.request.contextPath}/profile">
@@ -66,12 +67,10 @@
         </form>
     </section>
 
-    <!-- Delete Account -->
     <section>
         <h3>Delete Account</h3>
         <p style="font-size:0.9rem; margin-bottom:1rem; color:#777;">This action is permanent and cannot be undone.</p>
-        <form method="post" action="${pageContext.request.contextPath}/profile"
-              onsubmit="return confirm('Are you sure you want to delete your account? This cannot be undone.');">
+        <form method="post" action="${pageContext.request.contextPath}/profile" onsubmit="return confirm('Are you sure you want to delete your account? This cannot be undone.');">
             <input type="hidden" name="action" value="deleteAccount">
             <div class="form-group">
                 <label for="deletePassword">Confirm Password</label>

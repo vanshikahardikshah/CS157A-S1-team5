@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CopilotDiffPersistence">
+    <option name="pendingDiffs">
+      <map>
+        <entry key="$PROJECT_DIR$/README.md">
+          <value>
+            <PendingDiffInfo>
+              <option name="filePath" value="$PROJECT_DIR$/README.md" />
+              <option name="originalContent" value="# CS157A-S1-team5&#10;&#10;## NearFix - A Service Request Application&#10;&#10;### Prerequisites&#10;- Java 11 or higher&#10;- Maven 3.6+&#10;- MySQL 8.0+&#10;&#10;### Database Setup&#10;&#10;1. Create the database, tables, app user, and starter categories:&#10;&#10;```bash&#10;mysql -u root -p &lt; setup-database.sql&#10;```&#10;&#10;This script will:&#10;- Create the `nearfix` database&#10;- Create the application tables&#10;- Create the `nearfix_user` MySQL account with an empty password&#10;- Seed starter service categories so providers can add services immediately&#10;&#10;### Database Configuration&#10;&#10;The application defaults to:&#10;- **Host:** localhost&#10;- **Port:** 3306&#10;- **Database:** nearfix&#10;- **Username:** nearfix_user&#10;- **Password:** (empty)&#10;&#10;You can override them with environment variables:&#10;- `DB_URL`&#10;- `DB_USER`&#10;- `DB_PASSWORD`&#10;&#10;These settings are defined in `src/main/java/com/nearfix/dao/DatabaseConnection.java`.&#10;&#10;### Running the Application&#10;&#10;```bash&#10;mvn clean package&#10;mvn tomcat7:run&#10;```&#10;&#10;The application will start on:&#10;- http://localhost:8080/nearfix&#10;&#10;This version includes:&#10;- fixed search error handling&#10;- ZIP-only search support&#10;- provider business-name search&#10;- consistent database setup docs&#10;- seeded default service categories&#10;" />
+              <option name="updatedContent" value="# CS157A-S1-team5&#10;&#10;## NearFix - A Service Request Application&#10;&#10;### Prerequisites&#10;- Java 11 or higher&#10;- Maven 3.6+&#10;- MySQL 8.0+&#10;&#10;### Database Setup&#10;&#10;1. Create the database, tables, app user, starter categories, and default admin account:&#10;&#10;```bash&#10;mysql -u root -p &lt; setup-database.sql&#10;```&#10;&#10;This script will:&#10;- Create the `nearfix` database&#10;- Create the application tables&#10;- Create the `nearfix_user` MySQL account with an empty password&#10;- Seed starter service categories so providers can add services immediately&#10;- Seed a default admin login for local testing&#10;&#10;### Default Admin Login&#10;&#10;- **Email:** `admin@nearfix.local`&#10;- **Password:** `password`&#10;&#10;This admin account is seeded by `setup-database.sql` and is linked to the `admins` table.&#10;&#10;### Database Configuration&#10;&#10;The application defaults to:&#10;- **Host:** localhost&#10;- **Port:** 3306&#10;- **Database:** nearfix&#10;- **Username:** nearfix_user&#10;- **Password:** (empty)&#10;&#10;You can override them with environment variables:&#10;- `DB_URL`&#10;- `DB_USER`&#10;- `DB_PASSWORD`&#10;&#10;These settings are defined in `src/main/java/com/nearfix/dao/DatabaseConnection.java`.&#10;&#10;### Running the Application&#10;&#10;```bash&#10;mvn clean package&#10;mvn tomcat7:run&#10;```&#10;&#10;The application will start on:&#10;- http://localhost:8080/nearfix&#10;&#10;This version includes:&#10;- fixed search error handling&#10;- ZIP-only search support&#10;- provider business-name search&#10;- consistent database setup docs&#10;- seeded default service categories&#10;- seeded default admin account&#10;" />
+            </PendingDiffInfo>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+</project>

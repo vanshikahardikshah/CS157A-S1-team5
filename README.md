@@ -9,7 +9,7 @@
 
 ### Database Setup
 
-1. Create the database, tables, app user, and starter categories:
+1. Create the database, tables, app user, starter categories, and default admin account:
 
 ```bash
 mysql -u root -p < setup-database.sql
@@ -20,6 +20,14 @@ This script will:
 - Create the application tables
 - Create the `nearfix_user` MySQL account with an empty password
 - Seed starter service categories so providers can add services immediately
+- Seed a default admin login for local testing
+
+### Default Admin Login
+
+- **Email:** `admin@nearfix.local`
+- **Password:** `password`
+
+This admin account is seeded by `setup-database.sql` and is linked to the `admins` table.
 
 ### Database Configuration
 
@@ -53,3 +61,4 @@ This version includes:
 - provider business-name search
 - consistent database setup docs
 - seeded default service categories
+- seeded default admin account
