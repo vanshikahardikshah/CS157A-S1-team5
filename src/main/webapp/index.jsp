@@ -38,7 +38,7 @@
 <section class="hero">
     <h1>Find Trusted Local Services</h1>
     <p>Connect with plumbers, electricians, cleaners, technicians and more in your area.</p>
-    <form action="${pageContext.request.contextPath}/searchResults.jsp" method="get" class="search-bar">
+    <form action="${pageContext.request.contextPath}/search" method="get" class="search-bar">
     <input type="text" name="service" placeholder="What service do you need?" required>
     <input type="text" name="zipCode" placeholder="Zip Code" style="max-width:140px;">
     <button type="submit">Search</button>

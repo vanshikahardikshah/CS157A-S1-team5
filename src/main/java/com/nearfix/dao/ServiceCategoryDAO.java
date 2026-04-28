@@ -27,6 +27,31 @@ public class ServiceCategoryDAO {
         return categories;
     }
 
+    public boolean createCategory(String name, String description) {
+        String sql = "INSERT INTO service_categories (category_name, description) VALUES (?, ?)";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, name);
+            ps.setString(2, description);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean deleteCategory(int categoryId) {
+        String sql = "DELETE FROM service_categories WHERE category_id = ?";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, categoryId);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
     public ServiceCategory getById(int categoryId) {
         String sql = "SELECT * FROM service_categories WHERE category_id = ?";
         try (Connection conn = DatabaseConnection.getConnection();

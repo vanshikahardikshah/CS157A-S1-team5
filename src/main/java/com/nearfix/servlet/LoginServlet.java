@@ -29,6 +29,8 @@ public class LoginServlet extends HttpServlet {
             session.setAttribute("user", user);
             if ("provider".equals(user.getRole())) {
                 resp.sendRedirect(req.getContextPath() + "/provider/profile");
+            } else if ("admin".equals(user.getRole())) {
+                resp.sendRedirect(req.getContextPath() + "/admin/categories");
             } else {
                 resp.sendRedirect(req.getContextPath() + "/profile");
             }

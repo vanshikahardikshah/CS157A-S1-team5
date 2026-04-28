@@ -1,5 +1,6 @@
 package com.nearfix.dao;
 
+import com.nearfix.model.SearchResult;
 import com.nearfix.model.Service;
 
 import java.sql.*;
@@ -7,6 +8,80 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ServiceDAO {
+
+    public List<SearchResult> search(String keyword, String zipCode) {
+        return search(keyword, zipCode, null);
+    }
+
+    public List<SearchResult> search(String keyword, String zipCode, String preferredZip) {
+        boolean hasZipFilter = zipCode != null && !zipCode.trim().isEmpty();
+        String trimmed = keyword == null ? "" : keyword.trim();
+        String contains = "%" + trimmed + "%";
+        String prefix = trimmed + "%";
+        String prefZip = preferredZip == null ? "" : preferredZip;
+
+        StringBuilder sql = new StringBuilder(
+            "SELECT s.service_id, s.provider_id, s.service_name, s.description, " +
+            "s.price, s.location_zip, c.category_name, p.business_name, " +
+            "p.contact_number, u.email, " +
+            "COALESCE(rev.avg_rating, 0) AS avg_rating, " +
+            "COALESCE(rev.review_count, 0) AS review_count " +
+            "FROM services s " +
+            "JOIN providers p ON s.provider_id = p.provider_id " +
+            "JOIN users u ON p.user_id = u.user_id " +
+            "JOIN service_categories c ON s.category_id = c.category_id " +
+            "LEFT JOIN (SELECT provider_id, AVG(rating) AS avg_rating, COUNT(*) AS review_count " +
+            "           FROM reviews GROUP BY provider_id) rev ON rev.provider_id = p.provider_id " +
+            "WHERE (s.service_name LIKE ? OR s.description LIKE ? OR c.category_name LIKE ?)"
+        );
+        if (hasZipFilter) sql.append(" AND s.location_zip = ?");
+        sql.append(
+            " ORDER BY CASE " +
+            "   WHEN s.service_name = ? THEN 0 " +
+            "   WHEN s.service_name LIKE ? THEN 1 " +
+            "   WHEN s.service_name LIKE ? THEN 2 " +
+            "   WHEN c.category_name LIKE ? THEN 3 " +
+            "   ELSE 4 END, " +
+            " CASE WHEN s.location_zip = ? THEN 0 ELSE 1 END, " +
+            " s.service_name"
+        );
+
+        List<SearchResult> results = new ArrayList<>();
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql.toString())) {
+            int idx = 1;
+            ps.setString(idx++, contains);
+            ps.setString(idx++, contains);
+            ps.setString(idx++, contains);
+            if (hasZipFilter) ps.setString(idx++, zipCode.trim());
+            ps.setString(idx++, trimmed);
+            ps.setString(idx++, prefix);
+            ps.setString(idx++, contains);
+            ps.setString(idx++, contains);
+            ps.setString(idx++, prefZip);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    SearchResult r = new SearchResult();
+                    r.setServiceId(rs.getInt("service_id"));
+                    r.setProviderId(rs.getInt("provider_id"));
+                    r.setServiceName(rs.getString("service_name"));
+                    r.setDescription(rs.getString("description"));
+                    r.setPrice(rs.getBigDecimal("price"));
+                    r.setLocationZip(rs.getString("location_zip"));
+                    r.setCategoryName(rs.getString("category_name"));
+                    r.setBusinessName(rs.getString("business_name"));
+                    r.setContactNumber(rs.getString("contact_number"));
+                    r.setProviderEmail(rs.getString("email"));
+                    r.setAvgRating(rs.getBigDecimal("avg_rating"));
+                    r.setReviewCount(rs.getInt("review_count"));
+                    results.add(r);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return results;
+    }
 
     public boolean createService(Service service) {
         String sql = "INSERT INTO services (provider_id, category_id, service_name, description, price, location_zip) VALUES (?, ?, ?, ?, ?, ?)";
