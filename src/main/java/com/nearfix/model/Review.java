@@ -10,60 +10,31 @@ public class Review {
     private int rating;
     private String comment;
     private Timestamp reviewDate;
+    private String customerName;
 
-    public int getReviewId() {
-        return reviewId;
-    }
+    public Review() {}
 
-    public void setReviewId(int reviewId) {
-        this.reviewId = reviewId;
-    }
+    public int getReviewId() { return reviewId; }
+    public void setReviewId(int reviewId) { this.reviewId = reviewId; }
 
-    public int getBookingId() {
-        return bookingId;
-    }
+    public int getBookingId() { return bookingId; }
+    public void setBookingId(int bookingId) { this.bookingId = bookingId; }
 
-    public void setBookingId(int bookingId) {
-        this.bookingId = bookingId;
-    }
+    public int getCustomerId() { return customerId; }
+    public void setCustomerId(int customerId) { this.customerId = customerId; }
 
-    public int getCustomerId() {
-        return customerId;
-    }
+    public int getProviderId() { return providerId; }
+    public void setProviderId(int providerId) { this.providerId = providerId; }
 
-    public void setCustomerId(int customerId) {
-        this.customerId = customerId;
-    }
+    public int getRating() { return rating; }
+    public void setRating(int rating) { this.rating = rating; }
 
-    public int getProviderId() {
-        return providerId;
-    }
+    public String getComment() { return comment; }
+    public void setComment(String comment) { this.comment = comment; }
 
-    public void setProviderId(int providerId) {
-        this.providerId = providerId;
-    }
+    public Timestamp getReviewDate() { return reviewDate; }
+    public void setReviewDate(Timestamp reviewDate) { this.reviewDate = reviewDate; }
 
-    public int getRating() {
-        return rating;
-    }
-
-    public void setRating(int rating) {
-        this.rating = rating;
-    }
-
-    public String getComment() {
-        return comment;
-    }
-
-    public void setComment(String comment) {
-        this.comment = comment;
-    }
-
-    public Timestamp getReviewDate() {
-        return reviewDate;
-    }
-
-    public void setReviewDate(Timestamp reviewDate) {
-        this.reviewDate = reviewDate;
-    }
+    public String getCustomerName() { return customerName; }
+    public void setCustomerName(String customerName) { this.customerName = customerName; }
 }
