@@ -7,38 +7,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard - NearFix</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css">
-    <style>
-        .admin-container {
-            max-width: 1000px;
-            margin: 2rem auto;
-            padding: 1rem;
-        }
-
-        .admin-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-            gap: 1.5rem;
-            margin-top: 2rem;
-        }
-
-        .admin-card {
-            background: white;
-            padding: 1.5rem;
-            border-radius: 14px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
-            text-decoration: none;
-            color: inherit;
-        }
-
-        .admin-card h3 {
-            margin-bottom: 0.5rem;
-        }
-
-        .admin-card:hover {
-            transform: translateY(-2px);
-            transition: 0.2s ease;
-        }
-    </style>
 </head>
 <body>
 

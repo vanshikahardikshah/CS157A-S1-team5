@@ -9,22 +9,15 @@
     <title>My Reviews - NearFix</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css">
     <style>
-        .review-card {
-            background: white;
-            padding: 1rem 1.2rem;
-            margin-bottom: 1rem;
-            border-radius: 10px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-        }
-        .stars { color: #f5b301; font-size: 1.1rem; letter-spacing: 2px; }
         .summary {
-            background: #fff;
-            padding: 1rem 1.5rem;
-            border-radius: 10px;
+            background: var(--surface);
+            padding: 1.25rem 1.5rem;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
             margin-bottom: 1.5rem;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            box-shadow: var(--shadow-sm);
         }
-        .summary .big-rating { font-size: 2rem; font-weight: bold; color: #2c3e50; }
+        .summary .big-rating { font-size: 2.25rem; font-weight: 700; color: var(--primary-dark); }
     </style>
 </head>
 <body>
@@ -76,7 +69,7 @@
                     </c:forEach>
                 </p>
                 <p><strong>${review.customerName}</strong> on ${review.serviceName}</p>
-                <p style="color:#777; font-size:0.85rem;">${review.reviewDate}</p>
+                <p class="meta">${review.reviewDate}</p>
                 <c:if test="${not empty review.comment}">
                     <p style="margin-top:0.5rem;">${review.comment}</p>
                 </c:if>

@@ -20,7 +20,7 @@
 </nav>
 
 <div class="profile-container">
-    <h2 style="margin-bottom:1.5rem; color:#2c3e50;">Welcome, ${sessionScope.user.name}</h2>
+    <h2 style="margin-bottom:1.5rem;">Welcome, ${sessionScope.user.name}</h2>
 
     <c:if test="${not empty success}">
         <div class="alert alert-success">${success}</div>
@@ -67,7 +67,7 @@
 
     <section>
         <h3>Delete Account</h3>
-        <p style="font-size:0.9rem; margin-bottom:1rem; color:#777;">This action is permanent and cannot be undone.</p>
+        <p style="font-size:0.9rem; margin-bottom:1rem; color:var(--text-secondary);">This action is permanent and cannot be undone.</p>
         <form method="post" action="${pageContext.request.contextPath}/profile"
               onsubmit="return confirm('Are you sure you want to delete your account? This cannot be undone.');">
             <input type="hidden" name="action" value="deleteAccount">

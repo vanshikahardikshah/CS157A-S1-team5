@@ -71,10 +71,10 @@
                                 <td>
                                     <c:choose>
                                         <c:when test="${booking.status != 'completed'}">
-                                            <span style="color:#999;">—</span>
+                                            <span style="color:var(--text-muted);">—</span>
                                         </c:when>
                                         <c:when test="${reviewedBookingIds.contains(booking.bookingId)}">
-                                            <span style="color:#27ae60;">Reviewed</span>
+                                            <span style="color:var(--success); font-weight:600;">Reviewed</span>
                                         </c:when>
                                         <c:otherwise>
                                             <a class="btn btn-primary btn-sm" href="${pageContext.request.contextPath}/customer/review?bookingId=${booking.bookingId}">Leave Review</a>

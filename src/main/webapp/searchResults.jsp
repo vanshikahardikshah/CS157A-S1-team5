@@ -7,40 +7,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NearFix - Search Results</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css">
-    <style>
-        .results-container {
-            max-width: 900px;
-            margin: 2rem auto;
-            padding: 1rem;
-        }
-
-        .result-card {
-            background: white;
-            border-radius: 12px;
-            padding: 1rem 1.2rem;
-            margin-bottom: 1rem;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
-        }
-
-        .result-card h3 {
-            margin-bottom: 0.5rem;
-        }
-
-        .back-link {
-            display: inline-block;
-            margin-bottom: 1rem;
-            text-decoration: none;
-            color: #1f3c88;
-            font-weight: 600;
-        }
-
-        .result-actions {
-            margin-top: 1rem;
-            display: flex;
-            gap: 0.75rem;
-            flex-wrap: wrap;
-        }
-    </style>
 </head>
 <body>
 
@@ -146,7 +112,7 @@
                     <p><strong>Email:</strong> <%= rs.getString("email") %></p>
                     <p><strong>Rating:</strong>
                         <% if (reviewCount > 0) { %>
-                            <span style="color:#f5b301; letter-spacing:2px;"><%
+                            <span class="stars"><%
                                 for (int i = 1; i <= 5; i++) {
                                     out.print(i <= Math.round(avgRating) ? "★" : "☆");
                                 }
@@ -154,7 +120,7 @@
                             <%= String.format("%.1f", avgRating) %> / 5
                             (<%= reviewCount %> review<%= reviewCount == 1 ? "" : "s" %>)
                         <% } else { %>
-                            <span style="color:#777;">No reviews yet</span>
+                            <span style="color:var(--text-muted);">No reviews yet</span>
                         <% } %>
                     </p>
                     <div class="result-actions">

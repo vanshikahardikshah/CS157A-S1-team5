@@ -17,8 +17,9 @@
         }
         .star-group label {
             cursor: pointer;
-            font-size: 1.4rem;
-            color: #ccc;
+            font-size: 1.6rem;
+            color: var(--border-strong);
+            transition: color 0.15s ease;
         }
         .star-group input[type="radio"] {
             display: none;
@@ -26,7 +27,7 @@
         .star-group input[type="radio"]:checked ~ label,
         .star-group label:hover,
         .star-group label:hover ~ label {
-            color: #f5b301;
+            color: var(--star);
         }
     </style>
 </head>

@@ -23,7 +23,7 @@
 </nav>
 
 <div class="profile-container">
-    <h2 style="margin-bottom:1.5rem; color:#2c3e50;">Provider Profile</h2>
+    <h2 style="margin-bottom:1.5rem;">Provider Profile</h2>
 
     <c:if test="${not empty success}">
         <div class="alert alert-success">${success}</div>
