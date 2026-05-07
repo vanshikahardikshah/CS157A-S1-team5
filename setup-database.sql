@@ -68,6 +68,26 @@ CREATE TABLE IF NOT EXISTS bookings (
     FOREIGN KEY (service_id) REFERENCES services(service_id) ON DELETE CASCADE
 );
 
+
+CREATE TABLE IF NOT EXISTS payments (
+    payment_id INT AUTO_INCREMENT PRIMARY KEY,
+    card_last4 VARCHAR(4) NOT NULL,
+    payment_method VARCHAR(50) NOT NULL,
+    payment_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    amount DECIMAL(10,2) NOT NULL,
+    payment_status ENUM('completed', 'pending', 'failed') NOT NULL DEFAULT 'completed'
+);
+
+CREATE TABLE IF NOT EXISTS has_payment (
+    booking_id INT NOT NULL,
+    payment_id INT NOT NULL,
+    PRIMARY KEY (booking_id, payment_id),
+    UNIQUE KEY unique_booking_payment (booking_id),
+    UNIQUE KEY unique_payment_booking (payment_id),
+    FOREIGN KEY (booking_id) REFERENCES bookings(booking_id) ON DELETE CASCADE,
+    FOREIGN KEY (payment_id) REFERENCES payments(payment_id) ON DELETE CASCADE
+);
+
 CREATE TABLE IF NOT EXISTS reviews (
     review_id INT AUTO_INCREMENT PRIMARY KEY,
     booking_id INT NOT NULL,
@@ -168,6 +188,32 @@ INSERT IGNORE INTO bookings (booking_id, customer_id, service_id, booking_date, 
 (8, 8, 8, '2026-05-13', 'pending', 200.00),
 (9, 9, 9, '2026-05-14', 'completed', 95.00),
 (10, 10, 10, '2026-05-14', 'pending', 90.00);
+
+-- PAYMENTS
+INSERT IGNORE INTO payments (payment_id, card_last4, payment_method, payment_date, amount, payment_status) VALUES
+(1, '1111', 'credit_card', '2026-05-10 08:30:00', 130.00, 'completed'),
+(2, '2222', 'credit_card', '2026-05-10 09:15:00', 80.00, 'completed'),
+(3, '3333', 'credit_card', '2026-05-11 08:00:00', 110.00, 'completed'),
+(4, '4444', 'credit_card', '2026-05-11 11:30:00', 45.00, 'completed'),
+(5, '5555', 'credit_card', '2026-05-12 08:45:00', 75.00, 'completed'),
+(6, '6666', 'credit_card', '2026-05-12 12:30:00', 120.00, 'completed'),
+(7, '7777', 'credit_card', '2026-05-13 09:30:00', 150.00, 'completed'),
+(8, '8888', 'credit_card', '2026-05-13 08:30:00', 200.00, 'completed'),
+(9, '9999', 'credit_card', '2026-05-14 10:30:00', 95.00, 'completed'),
+(10, '1010', 'credit_card', '2026-05-14 14:30:00', 90.00, 'completed');
+
+-- HAS PAYMENT RELATIONSHIP
+INSERT IGNORE INTO has_payment (booking_id, payment_id) VALUES
+(1, 1),
+(2, 2),
+(3, 3),
+(4, 4),
+(5, 5),
+(6, 6),
+(7, 7),
+(8, 8),
+(9, 9),
+(10, 10);
 
 -- REVIEWS
 INSERT IGNORE INTO reviews (review_id, booking_id, customer_id, provider_id, rating, comment) VALUES

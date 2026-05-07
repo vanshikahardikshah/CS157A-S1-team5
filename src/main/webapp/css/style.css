@@ -305,6 +305,26 @@ body {
     padding-bottom: 0.5rem;
 }
 
+
+.payment-panel {
+    margin-top: 1.5rem;
+    padding: 1rem;
+    background: #f8f9fa;
+    border: 1px solid #eee;
+    border-radius: 8px;
+}
+
+.payment-panel h4 {
+    color: #2c3e50;
+    margin-bottom: 0.5rem;
+}
+
+.help-text {
+    color: #666;
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+}
+
 /* Service Cards */
 .service-list {
     display: flex;

@@ -18,6 +18,12 @@ The updated project now includes these additional customer-facing requirements:
    - A booking request is stored in the `bookings` table with `pending` status.
    - The selected availability slot is removed once booked to prevent duplicate booking of the same slot.
 
+3. **Payment**
+   - Customers enter credit-card payment information when submitting a booking request.
+   - For proof of concept, payment is assumed successful when the required fields are entered.
+   - Payment data is stored in the `payments` table using the original report attributes: `payment_id`, `card_last4`, `payment_method`, `payment_date`, `amount`, and `payment_status`.
+   - Booking/payment association is stored through the `has_payment` relationship table, matching the original report's `HasPayment(Booking_ID, Payment_ID)` relationship.
+
 ### Also included
 - **Customer booking history page** so customers can review submitted booking requests and current statuses.
 - **Provider booking page enhancement** so providers can see the service name and customer name for each booking request.

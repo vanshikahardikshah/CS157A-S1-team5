@@ -1,6 +1,7 @@
 package com.nearfix.dao;
 
 import com.nearfix.model.Booking;
+import com.nearfix.model.Payment;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -33,6 +34,73 @@ public class BookingDAO {
             ps.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
+        }
+    }
+
+
+    public boolean createBookingWithPayment(Booking booking, int availabilityId, int providerId, Payment payment) {
+        String bookingSql = "INSERT INTO bookings (customer_id, service_id, booking_date, status, total_price) VALUES (?, ?, ?, ?, ?)";
+        String availabilitySql = "DELETE FROM availability WHERE availability_id = ? AND provider_id = ?";
+
+        Connection conn = null;
+        try {
+            conn = DatabaseConnection.getConnection();
+            conn.setAutoCommit(false);
+
+            int bookingId;
+            try (PreparedStatement ps = conn.prepareStatement(bookingSql, Statement.RETURN_GENERATED_KEYS)) {
+                ps.setInt(1, booking.getCustomerId());
+                ps.setInt(2, booking.getServiceId());
+                ps.setDate(3, booking.getBookingDate());
+                ps.setString(4, booking.getStatus());
+                ps.setBigDecimal(5, booking.getTotalPrice());
+                if (ps.executeUpdate() == 0) {
+                    conn.rollback();
+                    return false;
+                }
+                try (ResultSet keys = ps.getGeneratedKeys()) {
+                    if (!keys.next()) {
+                        conn.rollback();
+                        return false;
+                    }
+                    bookingId = keys.getInt(1);
+                    booking.setBookingId(bookingId);
+                }
+            }
+
+            if (payment.getAmount() == null) {
+                payment.setAmount(booking.getTotalPrice());
+            }
+            new PaymentDAO().createPaymentForBooking(conn, bookingId, payment);
+
+            try (PreparedStatement ps = conn.prepareStatement(availabilitySql)) {
+                ps.setInt(1, availabilityId);
+                ps.setInt(2, providerId);
+                if (ps.executeUpdate() == 0) {
+                    conn.rollback();
+                    return false;
+                }
+            }
+
+            conn.commit();
+            return true;
+        } catch (SQLException e) {
+            if (conn != null) {
+                try {
+                    conn.rollback();
+                } catch (SQLException ignored) {
+                }
+            }
+            e.printStackTrace();
+            return false;
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.setAutoCommit(true);
+                    conn.close();
+                } catch (SQLException ignored) {
+                }
+            }
         }
     }
 

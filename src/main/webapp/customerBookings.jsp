@@ -23,7 +23,12 @@
     <h2>My Bookings</h2>
 
     <c:if test="${param.created == 'true'}">
-        <div class="alert alert-success">Your booking request has been submitted successfully.</div>
+        <div class="alert alert-success">
+            <c:choose>
+                <c:when test="${param.payment == 'true'}">Your booking request has been submitted successfully and payment was recorded.</c:when>
+                <c:otherwise>Your booking request has been submitted successfully.</c:otherwise>
+            </c:choose>
+        </div>
     </c:if>
 
     <section class="provider-section">
