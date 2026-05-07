@@ -45,6 +45,7 @@
                             <th>Customer</th>
                             <th>Date</th>
                             <th>Total Price</th>
+                            <th>Payment</th>
                             <th>Status</th>
                             <th>Actions</th>
                         </tr>
@@ -57,6 +58,19 @@
                                 <td>${booking.customerName}</td>
                                 <td>${booking.bookingDate}</td>
                                 <td>$${booking.totalPrice}</td>
+                                <td>
+                                    <c:choose>
+                                        <c:when test="${not empty booking.paymentStatus}">
+                                            <span class="status-badge status-${booking.paymentStatus}">${booking.paymentStatus}</span>
+                                            <c:if test="${not empty booking.cardLast4}">
+                                                <span class="payment-note">Card ending ${booking.cardLast4}</span>
+                                            </c:if>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <span class="text-muted">No payment</span>
+                                        </c:otherwise>
+                                    </c:choose>
+                                </td>
                                 <td>
                                     <span class="status-badge status-${booking.status}">${booking.status}</span>
                                 </td>

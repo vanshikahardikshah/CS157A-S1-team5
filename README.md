@@ -18,6 +18,12 @@ The updated project now includes these additional customer-facing requirements:
    - A booking request is stored in the `bookings` table with `pending` status.
    - The selected availability slot is removed once booked to prevent duplicate booking of the same slot.
 
+3. **Payment for bookings**
+   - Customers enter proof-of-concept credit card details while submitting a booking.
+   - The application assumes payment success after valid payment information is entered.
+   - A payment record is stored in the `payments` table and linked one-to-one with the booking.
+   - Only the card's last four digits are stored; the full card number and CVV are never persisted.
+
 ### Also included
 - **Customer booking history page** so customers can review submitted booking requests and current statuses.
 - **Provider booking page enhancement** so providers can see the service name and customer name for each booking request.
@@ -77,8 +83,8 @@ http://localhost:8080/nearfix
 
 - `/` - home page and service search
 - `/providers/view?providerId=...` - public provider profile
-- `/customer/book?serviceId=...` - booking request page
-- `/customer/bookings` - customer booking history
+- `/customer/book?serviceId=...` - booking and payment request page
+- `/customer/bookings` - customer booking and payment history
 - `/provider/profile` - provider dashboard
 - `/provider/services` - provider services management
 - `/provider/availability` - provider availability management

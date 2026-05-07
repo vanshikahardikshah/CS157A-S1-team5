@@ -69,6 +69,17 @@ CREATE TABLE IF NOT EXISTS bookings (
     FOREIGN KEY (service_id) REFERENCES services(service_id) ON DELETE CASCADE
 );
 
+CREATE TABLE IF NOT EXISTS payments (
+    payment_id INT AUTO_INCREMENT PRIMARY KEY,
+    booking_id INT NOT NULL UNIQUE,
+    card_last4 CHAR(4) NOT NULL,
+    payment_method ENUM('credit_card') NOT NULL DEFAULT 'credit_card',
+    payment_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    amount DECIMAL(10,2) NOT NULL,
+    payment_status ENUM('pending', 'completed', 'failed', 'refunded') NOT NULL DEFAULT 'completed',
+    FOREIGN KEY (booking_id) REFERENCES bookings(booking_id) ON DELETE CASCADE
+);
+
 CREATE TABLE IF NOT EXISTS reviews (
     review_id INT AUTO_INCREMENT PRIMARY KEY,
     booking_id INT NOT NULL,
@@ -169,6 +180,19 @@ INSERT IGNORE INTO bookings (booking_id, customer_id, service_id, booking_date, 
 (8, 8, 8, '2026-05-13', 'pending', 200.00),
 (9, 9, 9, '2026-05-14', 'completed', 95.00),
 (10, 10, 10, '2026-05-14', 'pending', 90.00);
+
+-- PAYMENTS
+INSERT IGNORE INTO payments (payment_id, booking_id, card_last4, payment_method, payment_date, amount, payment_status) VALUES
+(1, 1, '1111', 'credit_card', '2026-05-10 09:05:00', 130.00, 'completed'),
+(2, 2, '2222', 'credit_card', '2026-05-10 10:10:00', 80.00, 'completed'),
+(3, 3, '3333', 'credit_card', '2026-05-11 08:15:00', 110.00, 'completed'),
+(4, 4, '4444', 'credit_card', '2026-05-11 12:05:00', 45.00, 'completed'),
+(5, 5, '5555', 'credit_card', '2026-05-12 09:20:00', 75.00, 'completed'),
+(6, 6, '6666', 'credit_card', '2026-05-12 13:30:00', 120.00, 'refunded'),
+(7, 7, '7777', 'credit_card', '2026-05-13 10:05:00', 150.00, 'completed'),
+(8, 8, '8888', 'credit_card', '2026-05-13 09:10:00', 200.00, 'completed'),
+(9, 9, '9999', 'credit_card', '2026-05-14 11:15:00', 95.00, 'completed'),
+(10, 10, '0000', 'credit_card', '2026-05-14 15:05:00', 90.00, 'completed');
 
 -- REVIEWS
 INSERT IGNORE INTO reviews (review_id, booking_id, customer_id, provider_id, rating, comment) VALUES

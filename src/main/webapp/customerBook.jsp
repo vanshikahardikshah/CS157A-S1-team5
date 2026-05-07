@@ -38,7 +38,7 @@
         </section>
 
         <section class="provider-section">
-            <h3>Choose an Appointment Slot</h3>
+            <h3>Choose an Appointment Slot and Pay</h3>
             <c:choose>
                 <c:when test="${empty slots}">
                     <p class="empty-message">This provider has no available appointment slots right now.</p>
@@ -66,8 +66,40 @@
                                 </c:forEach>
                             </tbody>
                         </table>
+
+                        <div class="payment-panel">
+                            <h4>Payment Information</h4>
+                            <p class="help-text">Proof-of-concept payment: credit card payments are assumed successful and only the card's last 4 digits are stored.</p>
+                            <div class="form-group">
+                                <label for="cardholderName">Cardholder Name</label>
+                                <input type="text" id="cardholderName" name="cardholderName" required placeholder="Name on card">
+                            </div>
+                            <div class="form-group">
+                                <label for="cardNumber">Card Number</label>
+                                <input type="text" id="cardNumber" name="cardNumber" required inputmode="numeric" minlength="12" maxlength="23" placeholder="4111 1111 1111 1111">
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="expirationMonth">Expiration Month</label>
+                                    <input type="text" id="expirationMonth" name="expirationMonth" required pattern="0[1-9]|1[0-2]" maxlength="2" placeholder="MM">
+                                </div>
+                                <div class="form-group">
+                                    <label for="expirationYear">Expiration Year</label>
+                                    <input type="text" id="expirationYear" name="expirationYear" required pattern="\d{4}" maxlength="4" placeholder="YYYY">
+                                </div>
+                                <div class="form-group">
+                                    <label for="cvv">CVV</label>
+                                    <input type="password" id="cvv" name="cvv" required pattern="\d{3,4}" maxlength="4" placeholder="123">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="billingZip">Billing ZIP Code</label>
+                                <input type="text" id="billingZip" name="billingZip" required pattern="\d{5}" maxlength="5" value="${sessionScope.user.zipCode}" placeholder="95112">
+                            </div>
+                        </div>
+
                         <div style="margin-top:1rem;">
-                            <button type="submit" class="btn btn-success">Submit Booking Request</button>
+                            <button type="submit" class="btn btn-success">Submit Booking and Payment</button>
                         </div>
                     </form>
                 </c:otherwise>

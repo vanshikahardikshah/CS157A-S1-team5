@@ -430,3 +430,40 @@ body {
     margin-top: 3rem;
     font-size: 0.9rem;
 }
+
+/* Payment Form */
+.payment-panel {
+    margin-top: 1.5rem;
+    padding: 1.2rem;
+    background: #f8f9fa;
+    border: 1px solid #eee;
+    border-radius: 8px;
+}
+
+.payment-panel h4 {
+    margin-bottom: 0.4rem;
+    color: #2c3e50;
+}
+
+.help-text {
+    font-size: 0.85rem;
+    color: #666;
+    margin-bottom: 1rem;
+}
+
+.status-failed {
+    background: #fdecea;
+    color: #c0392b;
+}
+
+.status-refunded {
+    background: #e8eaf6;
+    color: #303f9f;
+}
+
+.payment-note {
+    display: block;
+    margin-top: 0.35rem;
+    font-size: 0.78rem;
+    color: #666;
+}

@@ -7,6 +7,7 @@ import com.nearfix.dao.ServiceDAO;
 import com.nearfix.dao.UserDAO;
 import com.nearfix.model.Availability;
 import com.nearfix.model.Booking;
+import com.nearfix.model.Payment;
 import com.nearfix.model.Provider;
 import com.nearfix.model.Service;
 import com.nearfix.model.User;
@@ -60,6 +61,12 @@ public class CustomerBookingServlet extends HttpServlet {
             return;
         }
 
+        String paymentError = validatePaymentFields(req);
+        if (paymentError != null) {
+            loadBookingPage(req, resp, paymentError);
+            return;
+        }
+
         ServiceDAO serviceDAO = new ServiceDAO();
         AvailabilityDAO availabilityDAO = new AvailabilityDAO();
         BookingDAO bookingDAO = new BookingDAO();
@@ -83,18 +90,63 @@ public class CustomerBookingServlet extends HttpServlet {
             booking.setStatus("pending");
             booking.setTotalPrice(service.getPrice());
 
-            boolean created = bookingDAO.createBooking(booking);
-            boolean removedSlot = created && availabilityDAO.deleteSlot(slot.getAvailabilityId(), slot.getProviderId());
+            Payment payment = new Payment();
+            payment.setCardLast4(getLastFourDigits(req.getParameter("cardNumber")));
+            payment.setPaymentMethod("credit_card");
+            payment.setAmount(service.getPrice());
+            payment.setPaymentStatus("completed");
 
-            if (created && removedSlot) {
-                resp.sendRedirect(req.getContextPath() + "/customer/bookings?created=true");
+            boolean created = bookingDAO.createBookingWithPayment(booking, slot.getAvailabilityId(), slot.getProviderId(), payment);
+
+            if (created) {
+                resp.sendRedirect(req.getContextPath() + "/customer/bookings?created=true&paid=true");
                 return;
             }
 
-            loadBookingPage(req, resp, "Unable to create the booking right now. Please try again.");
+            loadBookingPage(req, resp, "Unable to create the booking and payment right now. Please try again.");
         } catch (NumberFormatException e) {
             loadBookingPage(req, resp, "Invalid booking request.");
         }
+    }
+
+    private String validatePaymentFields(HttpServletRequest req) {
+        String cardholderName = trim(req.getParameter("cardholderName"));
+        String cardNumber = onlyDigits(req.getParameter("cardNumber"));
+        String expirationMonth = trim(req.getParameter("expirationMonth"));
+        String expirationYear = trim(req.getParameter("expirationYear"));
+        String cvv = onlyDigits(req.getParameter("cvv"));
+        String billingZip = trim(req.getParameter("billingZip"));
+
+        if (cardholderName.isEmpty() || cardNumber.isEmpty() || expirationMonth.isEmpty()
+                || expirationYear.isEmpty() || cvv.isEmpty() || billingZip.isEmpty()) {
+            return "Please enter all payment fields.";
+        }
+        if (cardNumber.length() < 12 || cardNumber.length() > 19) {
+            return "Card number must contain 12 to 19 digits.";
+        }
+        if (!expirationMonth.matches("0[1-9]|1[0-2]") || !expirationYear.matches("\\d{4}")) {
+            return "Expiration date must use a valid MM and YYYY format.";
+        }
+        if (!cvv.matches("\\d{3,4}")) {
+            return "Security code must contain 3 or 4 digits.";
+        }
+        if (!billingZip.matches("\\d{5}")) {
+            return "Billing ZIP code must contain 5 digits.";
+        }
+        return null;
+    }
+
+    private String trim(String value) {
+        return value == null ? "" : value.trim();
+    }
+
+    private String onlyDigits(String value) {
+        return trim(value).replaceAll("\\D", "");
+    }
+
+    private String getLastFourDigits(String cardNumber) {
+        String digits = onlyDigits(cardNumber);
+        return digits.substring(digits.length() - 4);
     }
 
     private void loadBookingPage(HttpServletRequest req, HttpServletResponse resp, String error)
