@@ -24,6 +24,7 @@
                 		<a href="${pageContext.request.contextPath}/provider/profile">Provider Dashboard</a>
                 		<a href="${pageContext.request.contextPath}/provider/services">My Services</a>
                 		<a href="${pageContext.request.contextPath}/provider/bookings">Bookings</a>
+                		<a href="${pageContext.request.contextPath}/provider/reviews">Reviews</a>
             		</c:when>
             		<c:otherwise>
                 		<a href="${pageContext.request.contextPath}/profile">My Profile</a>

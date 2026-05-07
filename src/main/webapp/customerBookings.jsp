@@ -31,6 +31,16 @@
         </div>
     </c:if>
 
+    <c:if test="${param.reviewed == 'true'}">
+        <div class="alert alert-success">Thank you! Your review has been submitted.</div>
+    </c:if>
+    <c:if test="${param.error == 'alreadyReviewed'}">
+        <div class="alert alert-error">You have already reviewed that booking.</div>
+    </c:if>
+    <c:if test="${param.error == 'notCompleted'}">
+        <div class="alert alert-error">You can only review a booking after it is completed.</div>
+    </c:if>
+
     <section class="provider-section">
         <c:choose>
             <c:when test="${empty bookings}">
@@ -46,6 +56,7 @@
                             <th>Date</th>
                             <th>Total Price</th>
                             <th>Status</th>
+                            <th>Review</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -57,6 +68,19 @@
                                 <td>${booking.bookingDate}</td>
                                 <td>$${booking.totalPrice}</td>
                                 <td><span class="status-badge status-${booking.status}">${booking.status}</span></td>
+                                <td>
+                                    <c:choose>
+                                        <c:when test="${booking.status != 'completed'}">
+                                            <span style="color:#999;">—</span>
+                                        </c:when>
+                                        <c:when test="${reviewedBookingIds.contains(booking.bookingId)}">
+                                            <span style="color:#27ae60;">Reviewed</span>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <a class="btn btn-primary btn-sm" href="${pageContext.request.contextPath}/customer/review?bookingId=${booking.bookingId}">Leave Review</a>
+                                        </c:otherwise>
+                                    </c:choose>
+                                </td>
                             </tr>
                         </c:forEach>
                     </tbody>

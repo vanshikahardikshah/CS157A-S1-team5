@@ -1,3 +1,4 @@
+<%@ page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8" language="java" %>
 <%@ page import="java.sql.*" %>
 <!DOCTYPE html>
 <html lang="en">
@@ -94,23 +95,32 @@
 
             String sql;
 
+            String ratingJoin =
+                  "LEFT JOIN (SELECT provider_id, AVG(rating) AS avg_rating, COUNT(*) AS review_count " +
+                  "FROM reviews GROUP BY provider_id) rs ON s.provider_id = rs.provider_id ";
+
+            String selectCols = "SELECT s.service_id, s.provider_id, s.service_name, s.description, s.price, s.location_zip, " +
+                                "p.business_name, u.email, " +
+                                "COALESCE(rs.avg_rating, 0) AS avg_rating, " +
+                                "COALESCE(rs.review_count, 0) AS review_count ";
+
             if (zipCode != null && !zipCode.trim().isEmpty()) {
-                sql = "SELECT s.service_id, s.provider_id, s.service_name, s.description, s.price, s.location_zip, " +
-                      "p.business_name, u.email " +
+                sql = selectCols +
                       "FROM services s " +
                       "JOIN providers p ON s.provider_id = p.provider_id " +
                       "JOIN users u ON p.user_id = u.user_id " +
+                      ratingJoin +
                       "WHERE s.service_name LIKE ? AND s.location_zip = ? " +
                       "ORDER BY s.service_name, p.business_name";
                 ps = con.prepareStatement(sql);
                 ps.setString(1, "%" + service + "%");
                 ps.setString(2, zipCode.trim());
             } else {
-                sql = "SELECT s.service_id, s.provider_id, s.service_name, s.description, s.price, s.location_zip, " +
-                      "p.business_name, u.email " +
+                sql = selectCols +
                       "FROM services s " +
                       "JOIN providers p ON s.provider_id = p.provider_id " +
                       "JOIN users u ON p.user_id = u.user_id " +
+                      ratingJoin +
                       "WHERE s.service_name LIKE ? " +
                       "ORDER BY s.service_name, p.business_name";
                 ps = con.prepareStatement(sql);
@@ -123,6 +133,10 @@
             while (rs.next()) {
                 found = true;
     %>
+                <%
+                    int reviewCount = rs.getInt("review_count");
+                    double avgRating = rs.getDouble("avg_rating");
+                %>
                 <div class="result-card">
                     <h3><%= rs.getString("service_name") %></h3>
                     <p><strong>Provider:</strong> <%= rs.getString("business_name") %></p>
@@ -130,6 +144,19 @@
                     <p><strong>Price:</strong> $<%= rs.getString("price") %></p>
                     <p><strong>ZIP Code:</strong> <%= rs.getString("location_zip") %></p>
                     <p><strong>Email:</strong> <%= rs.getString("email") %></p>
+                    <p><strong>Rating:</strong>
+                        <% if (reviewCount > 0) { %>
+                            <span style="color:#f5b301; letter-spacing:2px;"><%
+                                for (int i = 1; i <= 5; i++) {
+                                    out.print(i <= Math.round(avgRating) ? "★" : "☆");
+                                }
+                            %></span>
+                            <%= String.format("%.1f", avgRating) %> / 5
+                            (<%= reviewCount %> review<%= reviewCount == 1 ? "" : "s" %>)
+                        <% } else { %>
+                            <span style="color:#777;">No reviews yet</span>
+                        <% } %>
+                    </p>
                     <div class="result-actions">
                         <a class="btn btn-primary btn-sm" href="${pageContext.request.contextPath}/providers/view?providerId=<%= rs.getInt("provider_id") %>">View Provider Profile</a>
                         <% if ("customer".equals(userRole)) { %>

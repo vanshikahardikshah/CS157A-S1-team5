@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,6 +8,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Provider Details - NearFix</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css">
+    <style>
+        .stars { color: #f5b301; font-size: 1.1rem; letter-spacing: 2px; }
+        .review-card {
+            background: white;
+            padding: 1rem 1.2rem;
+            margin-bottom: 1rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        }
+    </style>
 </head>
 <body>
 
@@ -49,6 +60,25 @@
             <p><strong>Contact Number:</strong> ${provider.contactNumber}</p>
             <p><strong>Service ZIP Code:</strong> ${providerUser.zipCode}</p>
             <p><strong>Approval Status:</strong> ${provider.approvalStatus}</p>
+            <c:choose>
+                <c:when test="${reviewCount > 0}">
+                    <p>
+                        <span class="stars">
+                            <c:forEach begin="1" end="5" var="i">
+                                <c:choose>
+                                    <c:when test="${i <= avgRating}">&#9733;</c:when>
+                                    <c:otherwise>&#9734;</c:otherwise>
+                                </c:choose>
+                            </c:forEach>
+                        </span>
+                        <strong><fmt:formatNumber value="${avgRating}" pattern="#0.0"/></strong>
+                        / 5 &middot; ${reviewCount} review<c:if test="${reviewCount != 1}">s</c:if>
+                    </p>
+                </c:when>
+                <c:otherwise>
+                    <p style="color:#777;">No reviews yet.</p>
+                </c:otherwise>
+            </c:choose>
         </section>
 
         <section class="provider-section">
@@ -73,6 +103,34 @@
                             </div>
                         </c:forEach>
                     </div>
+                </c:otherwise>
+            </c:choose>
+        </section>
+
+        <section class="provider-section">
+            <h3>Customer Reviews</h3>
+            <c:choose>
+                <c:when test="${empty reviews}">
+                    <p class="empty-message">This provider has not received any reviews yet.</p>
+                </c:when>
+                <c:otherwise>
+                    <c:forEach var="review" items="${reviews}">
+                        <div class="review-card">
+                            <p class="stars">
+                                <c:forEach begin="1" end="5" var="i">
+                                    <c:choose>
+                                        <c:when test="${i <= review.rating}">&#9733;</c:when>
+                                        <c:otherwise>&#9734;</c:otherwise>
+                                    </c:choose>
+                                </c:forEach>
+                            </p>
+                            <p><strong>${review.customerName}</strong> on ${review.serviceName}</p>
+                            <p style="color:#777; font-size:0.85rem;">${review.reviewDate}</p>
+                            <c:if test="${not empty review.comment}">
+                                <p style="margin-top:0.5rem;">${review.comment}</p>
+                            </c:if>
+                        </div>
+                    </c:forEach>
                 </c:otherwise>
             </c:choose>
         </section>

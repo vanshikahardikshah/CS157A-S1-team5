@@ -2,6 +2,7 @@ package com.nearfix.servlet;
 
 import com.nearfix.dao.AvailabilityDAO;
 import com.nearfix.dao.ProviderDAO;
+import com.nearfix.dao.ReviewDAO;
 import com.nearfix.dao.ServiceDAO;
 import com.nearfix.dao.UserDAO;
 import com.nearfix.model.Provider;
@@ -39,6 +40,7 @@ public class ProviderViewServlet extends HttpServlet {
         ServiceDAO serviceDAO = new ServiceDAO();
         AvailabilityDAO availabilityDAO = new AvailabilityDAO();
         UserDAO userDAO = new UserDAO();
+        ReviewDAO reviewDAO = new ReviewDAO();
 
         Provider provider = providerDAO.getById(providerId);
         if (provider == null) {
@@ -49,11 +51,15 @@ public class ProviderViewServlet extends HttpServlet {
 
         User providerUser = userDAO.getById(provider.getUserId());
         List<Service> services = serviceDAO.getByProviderId(providerId);
+        ReviewDAO.RatingStats stats = reviewDAO.getProviderRatingStats(providerId);
 
         req.setAttribute("provider", provider);
         req.setAttribute("providerUser", providerUser);
         req.setAttribute("services", services);
         req.setAttribute("slots", availabilityDAO.getByProviderId(providerId));
+        req.setAttribute("reviews", reviewDAO.getByProviderId(providerId));
+        req.setAttribute("avgRating", stats.getAverageRating());
+        req.setAttribute("reviewCount", stats.getReviewCount());
         req.getRequestDispatcher("/providerView.jsp").forward(req, resp);
     }
 }
