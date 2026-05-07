@@ -3,6 +3,8 @@ package com.nearfix.dao;
 import com.nearfix.model.Provider;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ProviderDAO {
 
@@ -59,6 +61,55 @@ public class ProviderDAO {
             ps.setString(2, contactNumber);
             ps.setInt(3, providerId);
             return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public List<Provider> getAllProviders() {
+        List<Provider> providers = new ArrayList<>();
+
+        String sql = "SELECT p.provider_id, p.user_id, p.business_name, p.contact_number, p.approval_status, " +
+                     "u.name, u.email, u.zip_code " +
+                     "FROM providers p " +
+                     "JOIN users u ON p.user_id = u.user_id " +
+                     "ORDER BY p.provider_id";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                Provider provider = new Provider();
+                provider.setProviderId(rs.getInt("provider_id"));
+                provider.setUserId(rs.getInt("user_id"));
+                provider.setBusinessName(rs.getString("business_name"));
+                provider.setContactNumber(rs.getString("contact_number"));
+                provider.setApprovalStatus(rs.getString("approval_status"));
+                provider.setName(rs.getString("name"));
+                provider.setEmail(rs.getString("email"));
+                provider.setZipCode(rs.getString("zip_code"));
+                providers.add(provider);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return providers;
+    }
+
+    public boolean updateApprovalStatus(int providerId, String status) {
+        String sql = "UPDATE providers SET approval_status = ? WHERE provider_id = ?";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, status);
+            ps.setInt(2, providerId);
+            return ps.executeUpdate() > 0;
+
         } catch (SQLException e) {
             e.printStackTrace();
             return false;

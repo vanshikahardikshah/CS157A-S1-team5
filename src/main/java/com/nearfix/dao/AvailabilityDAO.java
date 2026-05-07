@@ -24,9 +24,29 @@ public class AvailabilityDAO {
         }
     }
 
+    public void deleteExpiredSlots() {
+        String sql = "DELETE FROM availability " +
+                     "WHERE available_date < CURDATE() " +
+                     "OR (available_date = CURDATE() AND end_time <= CURTIME())";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
     public List<Availability> getByProviderId(int providerId) {
         List<Availability> slots = new ArrayList<>();
-        String sql = "SELECT * FROM availability WHERE provider_id = ? ORDER BY available_date, start_time";
+
+        deleteExpiredSlots();
+
+        String sql = "SELECT * FROM availability " +
+                     "WHERE provider_id = ? " +
+                     "AND (available_date > CURDATE() " +
+                     "OR (available_date = CURDATE() AND end_time > CURTIME())) " +
+                     "ORDER BY available_date, start_time";
+
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, providerId);
@@ -41,7 +61,13 @@ public class AvailabilityDAO {
     }
 
     public Availability getById(int availabilityId) {
-        String sql = "SELECT * FROM availability WHERE availability_id = ?";
+        deleteExpiredSlots();
+
+        String sql = "SELECT * FROM availability " +
+                     "WHERE availability_id = ? " +
+                     "AND (available_date > CURDATE() " +
+                     "OR (available_date = CURDATE() AND end_time > CURTIME()))";
+
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, availabilityId);

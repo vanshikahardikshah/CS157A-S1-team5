@@ -12,27 +12,32 @@
 
 <nav class="navbar">
     <a href="${pageContext.request.contextPath}/" class="logo">Near<span>Fix</span></a>
-    <div class="nav-links">
-        <c:choose>
-            <c:when test="${not empty sessionScope.user}">
-                <c:choose>
-                    <c:when test="${sessionScope.user.role == 'provider'}">
-                        <a href="${pageContext.request.contextPath}/provider/profile">Provider Dashboard</a>
-                        <a href="${pageContext.request.contextPath}/provider/services">My Services</a>
-                        <a href="${pageContext.request.contextPath}/provider/bookings">Bookings</a>
-                    </c:when>
-                    <c:otherwise>
-                        <a href="${pageContext.request.contextPath}/profile">My Profile</a>
-                        <a href="${pageContext.request.contextPath}/customer/bookings">My Bookings</a>
-                    </c:otherwise>
-                </c:choose>
-                <a href="${pageContext.request.contextPath}/logout">Logout</a>
-            </c:when>
-            <c:otherwise>
-                <a href="${pageContext.request.contextPath}/login">Login</a>
-                <a href="${pageContext.request.contextPath}/register">Register</a>
-            </c:otherwise>
-        </c:choose>
+    <div class="nav-links">        
+       <c:choose>
+     		<c:when test="${not empty sessionScope.user}">
+        		<c:choose>
+            		<c:when test="${sessionScope.user.role == 'admin'}">
+                		<a href="${pageContext.request.contextPath}/admin/dashboard">Admin Dashboard</a>
+                		<a href="${pageContext.request.contextPath}/admin/approvals">Provider Approvals</a>
+            		</c:when>
+            		<c:when test="${sessionScope.user.role == 'provider'}">
+                		<a href="${pageContext.request.contextPath}/provider/profile">Provider Dashboard</a>
+                		<a href="${pageContext.request.contextPath}/provider/services">My Services</a>
+                		<a href="${pageContext.request.contextPath}/provider/bookings">Bookings</a>
+            		</c:when>
+            		<c:otherwise>
+                		<a href="${pageContext.request.contextPath}/profile">My Profile</a>
+                		<a href="${pageContext.request.contextPath}/customer/bookings">My Bookings</a>
+            		</c:otherwise>
+        	</c:choose>
+        	<a href="${pageContext.request.contextPath}/logout">Logout</a>
+    	</c:when>
+    	<c:otherwise>
+        	<a href="${pageContext.request.contextPath}/login">Login</a>
+        	<a href="${pageContext.request.contextPath}/register">Register</a>
+    	</c:otherwise>
+	</c:choose> 
+        
     </div>
 </nav>
 
