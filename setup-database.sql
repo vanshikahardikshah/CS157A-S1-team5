@@ -96,6 +96,8 @@ CREATE TABLE IF NOT EXISTS reviews (
     rating INT NOT NULL,
     comment TEXT,
     review_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE KEY unique_booking_review (booking_id),
+    CHECK (rating BETWEEN 1 AND 5),
     FOREIGN KEY (booking_id) REFERENCES bookings(booking_id) ON DELETE CASCADE,
     FOREIGN KEY (customer_id) REFERENCES users(user_id) ON DELETE CASCADE,
     FOREIGN KEY (provider_id) REFERENCES providers(provider_id) ON DELETE CASCADE

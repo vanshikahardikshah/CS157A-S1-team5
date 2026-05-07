@@ -1,6 +1,7 @@
 package com.nearfix.servlet;
 
 import com.nearfix.dao.BookingDAO;
+import com.nearfix.dao.ReviewDAO;
 import com.nearfix.model.User;
 
 import javax.servlet.ServletException;
@@ -29,7 +30,9 @@ public class CustomerBookingsServlet extends HttpServlet {
         }
 
         BookingDAO bookingDAO = new BookingDAO();
+        ReviewDAO reviewDAO = new ReviewDAO();
         req.setAttribute("bookings", bookingDAO.getByCustomerId(user.getUserId()));
+        req.setAttribute("reviewedBookingIds", reviewDAO.getReviewedBookingIdsForCustomer(user.getUserId()));
         req.getRequestDispatcher("/customerBookings.jsp").forward(req, resp);
     }
 }

@@ -17,13 +17,17 @@
      		<c:when test="${not empty sessionScope.user}">
         		<c:choose>
             		<c:when test="${sessionScope.user.role == 'admin'}">
-                		<a href="${pageContext.request.contextPath}/admin/dashboard">Admin Dashboard</a>
-                		<a href="${pageContext.request.contextPath}/admin/approvals">Provider Approvals</a>
+                		<a href="${pageContext.request.contextPath}/admin/dashboard">Dashboard</a>
+                		<a href="${pageContext.request.contextPath}/admin/approvals">Approvals</a>
+                		<a href="${pageContext.request.contextPath}/admin/categories">Categories</a>
+                		<a href="${pageContext.request.contextPath}/admin/reviews">Reviews</a>
+                		<a href="${pageContext.request.contextPath}/admin/users">Users</a>
             		</c:when>
             		<c:when test="${sessionScope.user.role == 'provider'}">
                 		<a href="${pageContext.request.contextPath}/provider/profile">Provider Dashboard</a>
                 		<a href="${pageContext.request.contextPath}/provider/services">My Services</a>
                 		<a href="${pageContext.request.contextPath}/provider/bookings">Bookings</a>
+                		<a href="${pageContext.request.contextPath}/provider/reviews">Reviews</a>
             		</c:when>
             		<c:otherwise>
                 		<a href="${pageContext.request.contextPath}/profile">My Profile</a>

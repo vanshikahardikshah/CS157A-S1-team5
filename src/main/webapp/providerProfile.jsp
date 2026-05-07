@@ -17,6 +17,7 @@
         <a href="${pageContext.request.contextPath}/provider/services">Services</a>
         <a href="${pageContext.request.contextPath}/provider/availability">Availability</a>
         <a href="${pageContext.request.contextPath}/provider/bookings">Bookings</a>
+        <a href="${pageContext.request.contextPath}/provider/reviews">Reviews</a>
         <a href="${pageContext.request.contextPath}/logout">Logout</a>
     </div>
 </nav>
