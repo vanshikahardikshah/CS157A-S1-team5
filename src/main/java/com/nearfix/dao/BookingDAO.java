@@ -25,9 +25,9 @@ public class BookingDAO {
         }
     }
 
+
     public boolean createBookingWithPayment(Booking booking, int availabilityId, int providerId, Payment payment) {
         String bookingSql = "INSERT INTO bookings (customer_id, service_id, booking_date, status, total_price) VALUES (?, ?, ?, ?, ?)";
-        String paymentSql = "INSERT INTO payments (booking_id, card_last4, payment_method, amount, payment_status) VALUES (?, ?, ?, ?, ?)";
         String availabilitySql = "DELETE FROM availability WHERE availability_id = ? AND provider_id = ?";
 
         Connection conn = null;
@@ -52,26 +52,14 @@ public class BookingDAO {
                         return false;
                     }
                     bookingId = keys.getInt(1);
+                    booking.setBookingId(bookingId);
                 }
             }
 
-            booking.setBookingId(bookingId);
-            payment.setBookingId(bookingId);
             if (payment.getAmount() == null) {
                 payment.setAmount(booking.getTotalPrice());
             }
-
-            try (PreparedStatement ps = conn.prepareStatement(paymentSql)) {
-                ps.setInt(1, payment.getBookingId());
-                ps.setString(2, payment.getCardLast4());
-                ps.setString(3, payment.getPaymentMethod());
-                ps.setBigDecimal(4, payment.getAmount());
-                ps.setString(5, payment.getPaymentStatus());
-                if (ps.executeUpdate() == 0) {
-                    conn.rollback();
-                    return false;
-                }
-            }
+            new PaymentDAO().createPaymentForBooking(conn, bookingId, payment);
 
             try (PreparedStatement ps = conn.prepareStatement(availabilitySql)) {
                 ps.setInt(1, availabilityId);
@@ -106,14 +94,11 @@ public class BookingDAO {
 
     public List<Booking> getByProviderId(int providerId) {
         List<Booking> bookings = new ArrayList<>();
-        String sql = "SELECT b.*, s.service_name, u.name AS customer_name, p.business_name, " +
-                     "pay.payment_id, pay.card_last4, pay.payment_method, pay.payment_date, " +
-                     "pay.amount AS payment_amount, pay.payment_status " +
+        String sql = "SELECT b.*, s.service_name, u.name AS customer_name, p.business_name " +
                      "FROM bookings b " +
                      "JOIN services s ON b.service_id = s.service_id " +
                      "JOIN users u ON b.customer_id = u.user_id " +
                      "JOIN providers p ON s.provider_id = p.provider_id " +
-                     "LEFT JOIN payments pay ON b.booking_id = pay.booking_id " +
                      "WHERE s.provider_id = ? " +
                      "ORDER BY b.booking_date DESC, b.booking_id DESC";
         try (Connection conn = DatabaseConnection.getConnection();
@@ -131,13 +116,10 @@ public class BookingDAO {
 
     public List<Booking> getByCustomerId(int customerId) {
         List<Booking> bookings = new ArrayList<>();
-        String sql = "SELECT b.*, s.service_name, p.business_name, " +
-                     "pay.payment_id, pay.card_last4, pay.payment_method, pay.payment_date, " +
-                     "pay.amount AS payment_amount, pay.payment_status " +
+        String sql = "SELECT b.*, s.service_name, p.business_name " +
                      "FROM bookings b " +
                      "JOIN services s ON b.service_id = s.service_id " +
                      "JOIN providers p ON s.provider_id = p.provider_id " +
-                     "LEFT JOIN payments pay ON b.booking_id = pay.booking_id " +
                      "WHERE b.customer_id = ? " +
                      "ORDER BY b.booking_date DESC, b.booking_id DESC";
         try (Connection conn = DatabaseConnection.getConnection();
@@ -154,11 +136,7 @@ public class BookingDAO {
     }
 
     public Booking getById(int bookingId) {
-        String sql = "SELECT b.*, pay.payment_id, pay.card_last4, pay.payment_method, pay.payment_date, " +
-                     "pay.amount AS payment_amount, pay.payment_status " +
-                     "FROM bookings b " +
-                     "LEFT JOIN payments pay ON b.booking_id = pay.booking_id " +
-                     "WHERE b.booking_id = ?";
+        String sql = "SELECT * FROM bookings WHERE booking_id = ?";
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, bookingId);
@@ -204,18 +182,6 @@ public class BookingDAO {
         }
         try {
             b.setProviderBusinessName(rs.getString("business_name"));
-        } catch (SQLException ignored) {
-        }
-        try {
-            Object paymentId = rs.getObject("payment_id");
-            if (paymentId != null) {
-                b.setPaymentId(((Number) paymentId).intValue());
-                b.setCardLast4(rs.getString("card_last4"));
-                b.setPaymentMethod(rs.getString("payment_method"));
-                b.setPaymentDate(rs.getTimestamp("payment_date"));
-                b.setPaymentAmount(rs.getBigDecimal("payment_amount"));
-                b.setPaymentStatus(rs.getString("payment_status"));
-            }
         } catch (SQLException ignored) {
         }
         return b;

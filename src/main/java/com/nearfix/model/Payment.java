@@ -5,7 +5,6 @@ import java.sql.Timestamp;
 
 public class Payment {
     private int paymentId;
-    private int bookingId;
     private String cardLast4;
     private String paymentMethod;
     private Timestamp paymentDate;
@@ -16,9 +15,6 @@ public class Payment {
 
     public int getPaymentId() { return paymentId; }
     public void setPaymentId(int paymentId) { this.paymentId = paymentId; }
-
-    public int getBookingId() { return bookingId; }
-    public void setBookingId(int bookingId) { this.bookingId = bookingId; }
 
     public String getCardLast4() { return cardLast4; }
     public void setCardLast4(String cardLast4) { this.cardLast4 = cardLast4; }

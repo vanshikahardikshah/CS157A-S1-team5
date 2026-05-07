@@ -96,10 +96,15 @@ public class CustomerBookingServlet extends HttpServlet {
             payment.setAmount(service.getPrice());
             payment.setPaymentStatus("completed");
 
-            boolean created = bookingDAO.createBookingWithPayment(booking, slot.getAvailabilityId(), slot.getProviderId(), payment);
+            boolean created = bookingDAO.createBookingWithPayment(
+                    booking,
+                    slot.getAvailabilityId(),
+                    slot.getProviderId(),
+                    payment
+            );
 
             if (created) {
-                resp.sendRedirect(req.getContextPath() + "/customer/bookings?created=true&paid=true");
+                resp.sendRedirect(req.getContextPath() + "/customer/bookings?created=true&payment=true");
                 return;
             }
 

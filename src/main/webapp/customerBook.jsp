@@ -69,32 +69,38 @@
 
                         <div class="payment-panel">
                             <h4>Payment Information</h4>
-                            <p class="help-text">Proof-of-concept payment: credit card payments are assumed successful and only the card's last 4 digits are stored.</p>
+                            <p class="help-text">Proof-of-concept payment: credit card payments are assumed successful after information is entered. Only the card's last four digits are stored.</p>
+
                             <div class="form-group">
                                 <label for="cardholderName">Cardholder Name</label>
                                 <input type="text" id="cardholderName" name="cardholderName" required placeholder="Name on card">
                             </div>
+
                             <div class="form-group">
                                 <label for="cardNumber">Card Number</label>
-                                <input type="text" id="cardNumber" name="cardNumber" required inputmode="numeric" minlength="12" maxlength="23" placeholder="4111 1111 1111 1111">
+                                <input type="text" id="cardNumber" name="cardNumber" required inputmode="numeric" autocomplete="cc-number" placeholder="4111 1111 1111 1111">
                             </div>
+
                             <div class="form-row">
                                 <div class="form-group">
                                     <label for="expirationMonth">Expiration Month</label>
-                                    <input type="text" id="expirationMonth" name="expirationMonth" required pattern="0[1-9]|1[0-2]" maxlength="2" placeholder="MM">
+                                    <input type="text" id="expirationMonth" name="expirationMonth" required maxlength="2" inputmode="numeric" autocomplete="cc-exp-month" placeholder="MM">
                                 </div>
                                 <div class="form-group">
                                     <label for="expirationYear">Expiration Year</label>
-                                    <input type="text" id="expirationYear" name="expirationYear" required pattern="\d{4}" maxlength="4" placeholder="YYYY">
-                                </div>
-                                <div class="form-group">
-                                    <label for="cvv">CVV</label>
-                                    <input type="password" id="cvv" name="cvv" required pattern="\d{3,4}" maxlength="4" placeholder="123">
+                                    <input type="text" id="expirationYear" name="expirationYear" required maxlength="4" inputmode="numeric" autocomplete="cc-exp-year" placeholder="YYYY">
                                 </div>
                             </div>
-                            <div class="form-group">
-                                <label for="billingZip">Billing ZIP Code</label>
-                                <input type="text" id="billingZip" name="billingZip" required pattern="\d{5}" maxlength="5" value="${sessionScope.user.zipCode}" placeholder="95112">
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="cvv">Security Code</label>
+                                    <input type="password" id="cvv" name="cvv" required maxlength="4" inputmode="numeric" autocomplete="cc-csc" placeholder="123">
+                                </div>
+                                <div class="form-group">
+                                    <label for="billingZip">Billing ZIP Code</label>
+                                    <input type="text" id="billingZip" name="billingZip" required maxlength="5" inputmode="numeric" value="${sessionScope.user.zipCode}" placeholder="95112">
+                                </div>
                             </div>
                         </div>
 

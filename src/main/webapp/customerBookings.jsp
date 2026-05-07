@@ -23,7 +23,12 @@
     <h2>My Bookings</h2>
 
     <c:if test="${param.created == 'true'}">
-        <div class="alert alert-success">Your booking request has been submitted successfully<c:if test="${param.paid == 'true'}"> and the payment was recorded</c:if>.</div>
+        <div class="alert alert-success">
+            <c:choose>
+                <c:when test="${param.payment == 'true'}">Your booking request has been submitted successfully and payment was recorded.</c:when>
+                <c:otherwise>Your booking request has been submitted successfully.</c:otherwise>
+            </c:choose>
+        </div>
     </c:if>
 
     <section class="provider-section">
@@ -40,8 +45,7 @@
                             <th>Provider</th>
                             <th>Date</th>
                             <th>Total Price</th>
-                            <th>Booking Status</th>
-                            <th>Payment</th>
+                            <th>Status</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -53,19 +57,6 @@
                                 <td>${booking.bookingDate}</td>
                                 <td>$${booking.totalPrice}</td>
                                 <td><span class="status-badge status-${booking.status}">${booking.status}</span></td>
-                                <td>
-                                    <c:choose>
-                                        <c:when test="${not empty booking.paymentStatus}">
-                                            <span class="status-badge status-${booking.paymentStatus}">${booking.paymentStatus}</span>
-                                            <c:if test="${not empty booking.cardLast4}">
-                                                <span class="payment-note">Card ending ${booking.cardLast4}</span>
-                                            </c:if>
-                                        </c:when>
-                                        <c:otherwise>
-                                            <span class="text-muted">No payment</span>
-                                        </c:otherwise>
-                                    </c:choose>
-                                </td>
                             </tr>
                         </c:forEach>
                     </tbody>

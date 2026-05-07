@@ -61,15 +61,24 @@ CREATE TABLE IF NOT EXISTS bookings (
     FOREIGN KEY (service_id) REFERENCES services(service_id) ON DELETE CASCADE
 );
 
+
 CREATE TABLE IF NOT EXISTS payments (
     payment_id INT AUTO_INCREMENT PRIMARY KEY,
-    booking_id INT NOT NULL UNIQUE,
-    card_last4 CHAR(4) NOT NULL,
-    payment_method ENUM('credit_card') NOT NULL DEFAULT 'credit_card',
+    card_last4 VARCHAR(4) NOT NULL,
+    payment_method VARCHAR(50) NOT NULL,
     payment_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     amount DECIMAL(10,2) NOT NULL,
-    payment_status ENUM('pending', 'completed', 'failed', 'refunded') NOT NULL DEFAULT 'completed',
-    FOREIGN KEY (booking_id) REFERENCES bookings(booking_id) ON DELETE CASCADE
+    payment_status ENUM('completed', 'pending', 'failed') NOT NULL DEFAULT 'completed'
+);
+
+CREATE TABLE IF NOT EXISTS has_payment (
+    booking_id INT NOT NULL,
+    payment_id INT NOT NULL,
+    PRIMARY KEY (booking_id, payment_id),
+    UNIQUE KEY unique_booking_payment (booking_id),
+    UNIQUE KEY unique_payment_booking (payment_id),
+    FOREIGN KEY (booking_id) REFERENCES bookings(booking_id) ON DELETE CASCADE,
+    FOREIGN KEY (payment_id) REFERENCES payments(payment_id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS reviews (
