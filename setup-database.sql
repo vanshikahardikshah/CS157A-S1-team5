@@ -5,7 +5,7 @@ USE nearfix;
 -- Create app database user with no password
 CREATE USER IF NOT EXISTS 'nearfix_user'@'localhost';
 GRANT ALL PRIVILEGES ON nearfix.* TO 'nearfix_user'@'localhost';
-FLUSH PRIVILEGES;
+
 
 -- =========================
 -- TABLES
