@@ -24,7 +24,7 @@
 
 <div class="provider-container">
     <h2>Manage Users</h2>
-    <p style="color:#666; margin-bottom:1rem;">Deleting a user cascades to their bookings, reviews, and provider record.</p>
+    <p style="color:var(--text-secondary); margin-bottom:1rem;">Deleting a user cascades to their bookings, reviews, and provider record.</p>
 
     <c:if test="${not empty sessionScope.success}">
         <div class="alert alert-success">${sessionScope.success}</div>
@@ -64,7 +64,7 @@
                             <td>
                                 <c:choose>
                                     <c:when test="${u.userId == sessionScope.user.userId}">
-                                        <span style="color:#999;">(you)</span>
+                                        <span style="color:var(--text-muted);">(you)</span>
                                     </c:when>
                                     <c:otherwise>
                                         <form method="post" action="${pageContext.request.contextPath}/admin/users"

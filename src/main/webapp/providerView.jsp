@@ -8,16 +8,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Provider Details - NearFix</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css">
-    <style>
-        .stars { color: #f5b301; font-size: 1.1rem; letter-spacing: 2px; }
-        .review-card {
-            background: white;
-            padding: 1rem 1.2rem;
-            margin-bottom: 1rem;
-            border-radius: 10px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-        }
-    </style>
 </head>
 <body>
 
@@ -76,7 +66,7 @@
                     </p>
                 </c:when>
                 <c:otherwise>
-                    <p style="color:#777;">No reviews yet.</p>
+                    <p style="color:var(--text-muted);">No reviews yet.</p>
                 </c:otherwise>
             </c:choose>
         </section>
@@ -125,7 +115,7 @@
                                 </c:forEach>
                             </p>
                             <p><strong>${review.customerName}</strong> on ${review.serviceName}</p>
-                            <p style="color:#777; font-size:0.85rem;">${review.reviewDate}</p>
+                            <p class="meta">${review.reviewDate}</p>
                             <c:if test="${not empty review.comment}">
                                 <p style="margin-top:0.5rem;">${review.comment}</p>
                             </c:if>

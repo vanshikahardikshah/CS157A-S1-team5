@@ -7,9 +7,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Moderate Reviews - NearFix</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css">
-    <style>
-        .stars { color: #f5b301; letter-spacing: 2px; }
-    </style>
 </head>
 <body>
 
