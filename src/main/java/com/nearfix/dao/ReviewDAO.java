@@ -80,6 +80,39 @@ public class ReviewDAO {
         return new RatingStats(0.0, 0);
     }
 
+    public List<Review> getAll() {
+        List<Review> reviews = new ArrayList<>();
+        String sql = "SELECT r.*, u.name AS customer_name, s.service_name, p.business_name AS provider_business_name " +
+                     "FROM reviews r " +
+                     "JOIN users u ON r.customer_id = u.user_id " +
+                     "JOIN bookings b ON r.booking_id = b.booking_id " +
+                     "JOIN services s ON b.service_id = s.service_id " +
+                     "JOIN providers p ON r.provider_id = p.provider_id " +
+                     "ORDER BY r.review_date DESC, r.review_id DESC";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                reviews.add(mapRow(rs));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return reviews;
+    }
+
+    public boolean delete(int reviewId) {
+        String sql = "DELETE FROM reviews WHERE review_id = ?";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, reviewId);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
     public Set<Integer> getReviewedBookingIdsForCustomer(int customerId) {
         Set<Integer> ids = new HashSet<>();
         String sql = "SELECT booking_id FROM reviews WHERE customer_id = ?";
@@ -107,6 +140,7 @@ public class ReviewDAO {
         r.setReviewDate(rs.getTimestamp("review_date"));
         try { r.setCustomerName(rs.getString("customer_name")); } catch (SQLException ignored) {}
         try { r.setServiceName(rs.getString("service_name")); } catch (SQLException ignored) {}
+        try { r.setProviderBusinessName(rs.getString("provider_business_name")); } catch (SQLException ignored) {}
         return r;
     }
 
