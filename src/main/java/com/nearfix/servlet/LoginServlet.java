@@ -27,7 +27,10 @@ public class LoginServlet extends HttpServlet {
         if (user != null) {
             HttpSession session = req.getSession();
             session.setAttribute("user", user);
-            if ("provider".equals(user.getRole())) {
+
+            if ("admin".equalsIgnoreCase(user.getRole())) {
+                resp.sendRedirect(req.getContextPath() + "/admin/dashboard");
+            } else if ("provider".equalsIgnoreCase(user.getRole())) {
                 resp.sendRedirect(req.getContextPath() + "/provider/profile");
             } else {
                 resp.sendRedirect(req.getContextPath() + "/profile");

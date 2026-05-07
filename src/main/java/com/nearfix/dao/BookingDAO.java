@@ -23,9 +23,22 @@ public class BookingDAO {
             return false;
         }
     }
+    public void markPastBookingsCompleted() {
+        String sql = "UPDATE bookings " +
+                     "SET status = 'completed' " +
+                     "WHERE booking_date < CURDATE() AND status = 'confirmed'";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 
     public List<Booking> getByProviderId(int providerId) {
         List<Booking> bookings = new ArrayList<>();
+        markPastBookingsCompleted();
         String sql = "SELECT b.*, s.service_name, u.name AS customer_name, p.business_name " +
                      "FROM bookings b " +
                      "JOIN services s ON b.service_id = s.service_id " +
@@ -48,6 +61,7 @@ public class BookingDAO {
 
     public List<Booking> getByCustomerId(int customerId) {
         List<Booking> bookings = new ArrayList<>();
+        markPastBookingsCompleted();
         String sql = "SELECT b.*, s.service_name, p.business_name " +
                      "FROM bookings b " +
                      "JOIN services s ON b.service_id = s.service_id " +
@@ -118,4 +132,6 @@ public class BookingDAO {
         }
         return b;
     }
+ 
 }
+
