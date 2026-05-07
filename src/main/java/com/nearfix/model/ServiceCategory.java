@@ -4,6 +4,7 @@ public class ServiceCategory {
     private int categoryId;
     private String categoryName;
     private String description;
+    private int serviceCount;
 
     public ServiceCategory() {}
 
@@ -15,4 +16,7 @@ public class ServiceCategory {
 
     public String getDescription() { return description; }
     public void setDescription(String description) { this.description = description; }
+
+    public int getServiceCount() { return serviceCount; }
+    public void setServiceCount(int serviceCount) { this.serviceCount = serviceCount; }
 }
