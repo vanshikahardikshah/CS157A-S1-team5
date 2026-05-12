@@ -48,37 +48,37 @@
 <section class="hero">
     <h1>Find Trusted Local Services</h1>
     <p>Connect with plumbers, electricians, cleaners, technicians and more in your area.</p>
-    <form action="${pageContext.request.contextPath}/searchResults.jsp" method="get" class="search-bar">
-        <input type="text" name="service" placeholder="What service do you need?" required>
+    <form action="${pageContext.request.contextPath}/search" method="get" class="search-bar">
+        <input type="text" name="service" placeholder="What service do you need?">
         <input type="text" name="zipCode" placeholder="Zip Code" style="max-width:140px;">
         <button type="submit">Search</button>
     </form>
-    <p style="margin-top:0.8rem; font-size:0.85rem; opacity:0.7;">Search services by keyword and optional ZIP code.</p>
+    <p style="margin-top:0.8rem; font-size:0.85rem; opacity:0.7;">Search by keyword and ZIP code; filter by category, rating, and availability on the results page.</p>
 </section>
 
 <section class="categories">
     <h2>Popular Service Categories</h2>
     <div class="category-grid">
-        <div class="category-card">
+        <a class="category-card" href="${pageContext.request.contextPath}/search?service=electrical">
             <div class="icon">&#128268;</div>
             <h3>Electricians</h3>
-        </div>
-        <div class="category-card">
+        </a>
+        <a class="category-card" href="${pageContext.request.contextPath}/search?service=plumbing">
             <div class="icon">&#128295;</div>
             <h3>Plumbers</h3>
-        </div>
-        <div class="category-card">
+        </a>
+        <a class="category-card" href="${pageContext.request.contextPath}/search?service=cleaning">
             <div class="icon">&#129529;</div>
             <h3>Cleaners</h3>
-        </div>
-        <div class="category-card">
+        </a>
+        <a class="category-card" href="${pageContext.request.contextPath}/search?service=technician">
             <div class="icon">&#128736;</div>
             <h3>Technicians</h3>
-        </div>
-        <div class="category-card">
+        </a>
+        <a class="category-card" href="${pageContext.request.contextPath}/search?service=painting">
             <div class="icon">&#127912;</div>
             <h3>Painters</h3>
-        </div>
+        </a>
     </div>
 </section>
 
